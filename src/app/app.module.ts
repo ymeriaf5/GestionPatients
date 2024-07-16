@@ -25,6 +25,8 @@ import { EmployeeFormComponentComponent } from './employee-form-component/employ
 import {MatPaginator, MatPaginatorModule} from "@angular/material/paginator";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import { RouterModule } from '@angular/router';
+import {MatStepperModule} from "@angular/material/stepper";
+import { StepperComponent } from './stepper/stepper.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +34,8 @@ import { RouterModule } from '@angular/router';
     AdminTemplateComponent,
     DemoListeComponent,
     AddEmployeeComponent,
-    EmployeeFormComponentComponent
+    EmployeeFormComponentComponent,
+    StepperComponent
   ],
   imports: [
     BrowserModule,
@@ -57,6 +60,7 @@ import { RouterModule } from '@angular/router';
     MatPaginatorModule,
     BrowserAnimationsModule,
     RouterModule,
+    MatStepperModule
   ],
   providers: [
     provideAnimationsAsync(),
