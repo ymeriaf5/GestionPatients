@@ -1,0 +1,37 @@
+<html>
+<body>
+<mat-toolbar color="primary">
+  <button mat-icon-button (click)="drawer.toggle()">
+    <mat-icon>menu</mat-icon>
+  </button>
+  <span class="spacer"></span>
+  <button mat-button routerLink="/home" color="primary">Home</button>
+  <button mat-button routerLink="/profile" color="primary">Profile</button>
+  <button mat-button [matMenuTriggerFor]="importMenu" color="primary">
+    Import
+    <mat-icon iconPosition="after">arrow_drop_down</mat-icon>
+  </button>
+  <mat-menu #importMenu="matMenu">
+    <button mat-menu-item>Load Students</button>
+    <button mat-menu-item>Load Payments</button>
+  </mat-menu>
+  <button mat-raised-button color="accent">Login</button>
+</mat-toolbar>
+
+<mat-drawer-container class="drawer-container">
+  <mat-drawer #drawer class="drawer" mode="side" opened="true">
+    <mat-nav-list>
+      <a mat-list-item routerLink="/dashboard" (click)="drawer.close()">Dashboard</a>
+      <a mat-list-item routerLink="/employes">Employee</a>
+      <a mat-list-item routerLink="/payments" (click)="drawer.close()">Payments</a>
+    </mat-nav-list>
+  </mat-drawer>
+
+  <mat-drawer-content class="drawer-content">
+    <div class="page-content">
+      <router-outlet></router-outlet>
+    </div>
+  </mat-drawer-content>
+</mat-drawer-container>
+</body>
+</html>

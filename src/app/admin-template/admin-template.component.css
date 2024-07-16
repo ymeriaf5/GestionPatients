@@ -1,0 +1,28 @@
+.drawer-container {
+  height: 100%;
+}
+
+.drawer {
+  width: 250px; /* Adjust width as needed */
+}
+
+.drawer-content {
+  padding: 20px; /* Adjust padding as needed */
+}
+
+.page-content {
+  min-height: 600px; /* Adjust minimum height as needed */
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+.button-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 16px; /* Adjust the value as needed */
+}
+
+.add-employee-button {
+  margin-bottom: 16px; /* Adjust the value as needed */
+}

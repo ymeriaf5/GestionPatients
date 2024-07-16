@@ -1,0 +1,27 @@
+<div class="container">
+  <mat-card class="card-container">
+    <form #myForm="ngForm" (ngSubmit)="onSubmit(myForm)" class="form-container">
+      <div class="form-field">
+        <mat-form-field appearance="fill">
+          <mat-label>Nom</mat-label>
+          <input matInput type="text" id="name" name="name" ngModel required>
+        </mat-form-field>
+      </div>
+      <div class="form-field">
+        <mat-form-field appearance="fill">
+          <mat-label>Email</mat-label>
+          <input matInput type="email" id="email" name="email" ngModel required>
+        </mat-form-field>
+      </div>
+      <div class="form-field">
+        <mat-form-field appearance="fill">
+          <mat-label>Mot de Passe</mat-label>
+          <input matInput type="password" id="password" name="password" ngModel required>
+        </mat-form-field>
+      </div>
+      <div class="form-actions">
+        <button mat-raised-button type="submit" color="primary">Ajouter</button>
+      </div>
+    </form>
+  </mat-card>
+</div>
