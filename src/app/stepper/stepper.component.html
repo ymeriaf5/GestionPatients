@@ -1,5 +1,4 @@
 <mat-horizontal-stepper>
-  <!-- Step 1: Name -->
   <mat-step [stepControl]="firstFormGroup">
     <form [formGroup]="firstFormGroup" (ngSubmit)="onSubmit()">
       <mat-form-field appearance="fill">
@@ -7,12 +6,11 @@
         <input matInput type="text" formControlName="name" required>
       </mat-form-field>
       <div>
-        <button mat-button matStepperNext>Next</button>
+        <button mat-button matStepperNext aria-label="Suivant">Suivant</button>
       </div>
     </form>
   </mat-step>
 
-  <!-- Step 2: Email -->
   <mat-step [stepControl]="secondFormGroup">
     <form [formGroup]="secondFormGroup" (ngSubmit)="onSubmit()">
       <mat-form-field appearance="fill">
@@ -20,13 +18,12 @@
         <input matInput type="email" formControlName="email" required>
       </mat-form-field>
       <div>
-        <button mat-button matStepperPrevious>Back</button>
-        <button mat-button matStepperNext>Next</button>
+        <button mat-button matStepperPrevious aria-label="Précédent">Précédent</button>
+        <button mat-button matStepperNext aria-label="Suivant">Suivant</button>
       </div>
     </form>
   </mat-step>
 
-  <!-- Step 3: Password -->
   <mat-step [stepControl]="thirdFormGroup">
     <form [formGroup]="thirdFormGroup" (ngSubmit)="onSubmit()">
       <mat-form-field appearance="fill">
@@ -34,7 +31,7 @@
         <input matInput type="password" formControlName="password" required>
       </mat-form-field>
       <div>
-        <button mat-button matStepperPrevious>Back</button>
+        <button mat-button matStepperPrevious aria-label="Précédent">Précédent</button>
         <button mat-raised-button type="submit" color="primary">Ajouter</button>
       </div>
     </form>
