@@ -43,7 +43,7 @@ export class EmployeeFormComponentComponent implements OnInit {
   onSubmit(): void {
     if (this.employeeForm.valid) {
       this.employeeService.updateEmployee(this.employeeForm.value).subscribe(() => {
-        this.router.navigate(['/employes']);
+        this.router.navigate(['/dashboard/employees']);
       });
     }
   }

@@ -27,6 +27,10 @@ import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import { RouterModule } from '@angular/router';
 import {MatStepperModule} from "@angular/material/stepper";
 import { StepperComponent } from './stepper/stepper.component';
+import { LoginComponent } from './login/login.component';
+import {MatTabLabel} from "@angular/material/tabs";
+import {MatSortModule} from "@angular/material/sort";
+import {MatSelectModule} from "@angular/material/select";
 
 @NgModule({
   declarations: [
@@ -35,33 +39,37 @@ import { StepperComponent } from './stepper/stepper.component';
     DemoListeComponent,
     AddEmployeeComponent,
     EmployeeFormComponentComponent,
-    StepperComponent
+    StepperComponent,
+    LoginComponent
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    MatToolbarModule,
-    MatButtonModule,
-    MatIconModule,
-    MatMenuModule,
-    MatSidenavModule,
-    MatNavList,
-    MatListItem,
-    MatList,
-    HttpClientModule,
-    MatTableModule,
-    FormsModule,
-    MatCardModule,
-    MatLabel,
-    MatFormFieldModule,
-    MatInputModule,
-    MatFormFieldModule,
-    ReactiveFormsModule,
-    MatPaginatorModule,
-    BrowserAnimationsModule,
-    RouterModule,
-    MatStepperModule
-  ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        MatToolbarModule,
+        MatButtonModule,
+        MatIconModule,
+        MatMenuModule,
+        MatSidenavModule,
+        MatNavList,
+        MatListItem,
+        MatList,
+        HttpClientModule,
+        MatTableModule,
+        FormsModule,
+        MatCardModule,
+        MatLabel,
+        MatSortModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatFormFieldModule,
+        ReactiveFormsModule,
+        MatPaginatorModule,
+        BrowserAnimationsModule,
+        RouterModule,
+        MatStepperModule,
+        MatTabLabel,
+        MatSelectModule
+    ],
   providers: [
     provideAnimationsAsync(),
     DemoService,

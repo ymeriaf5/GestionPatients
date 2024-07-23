@@ -24,7 +24,7 @@ export class AddEmployeeComponent {
         response => {
           if (response.status === 201) {
             console.log('Employee added successfully');
-            this.router.navigate(['/employes']);
+            this.router.navigate(['/dashboard/employees']);
           } else {
             console.error('Failed to add employee');
           }

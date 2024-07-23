@@ -1,13 +1,22 @@
 .drawer-container {
-  height: 100%;
+  height: 100vh;
 }
 
 .drawer {
-  width: 250px; /* Adjust width as needed */
+  width: 250px;
 }
 
 .drawer-content {
-  padding: 20px; /* Adjust padding as needed */
+  padding: 20px;
+}
+
+mat-nav-list a {
+  display: flex;
+  align-items: center;
+}
+
+mat-icon {
+  margin-right: 8px;
 }
 
 .page-content {
@@ -26,3 +35,83 @@
 .add-employee-button {
   margin-bottom: 16px; /* Adjust the value as needed */
 }
+body {
+  margin: 0;
+  font-family: Roboto, sans-serif;
+}
+.page-content {
+  margin-top: 20px;
+}
+.spacer {
+  flex: 1 1 auto;
+}
+mat-toolbar {
+  position: fixed;
+  z-index: 2;
+  top: 0;
+  width: 100%;
+  background-color: #000 !important;
+  color: white;
+}
+mat-drawer-container {
+  margin-top: 64px; /* height of the toolbar */
+}
+a.mat-list-item {
+  color: white;
+}
+a.mat-list-item:hover {
+  background-color: #555;
+}
+button[mat-raised-button] {
+  padding: 10px 20px;
+  border-radius: 20px;
+  width: 100px;
+  color: white;
+  accent-color: white;
+}
+.custom-toolbar {
+  background: linear-gradient(90deg, black, #333);
+  color: white;
+  position: fixed;
+  z-index: 2;
+  top: 0;
+  width: 100%;
+}
+
+.logo {
+  height: 30px;
+  width: 40px;
+  margin-right: 10px;
+}
+
+.mat-toolbar-row, .mat-toolbar-single-row {
+  min-height: 64px;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+button[mat-button] {
+  text-transform: none;
+}
+
+button[mat-button]:hover {
+  background-color: #555;
+}
+
+button[mat-raised-button] {
+  padding: 10px 20px;
+  border-radius: 20px;
+  color: white;
+  background-color: #555;
+}
+button[mat-button] {
+  color: white;
+}
+
+button[mat-raised-button]:hover {
+  background-color: #777;
+}
+
+

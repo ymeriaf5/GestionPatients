@@ -1,0 +1,21 @@
+<div class="login-container">
+  <mat-card class="login-card">
+    <img src="assets/logo3.png" class="logo-image" alt="Logo">
+    <h2>Authentification</h2>
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <div>
+        <mat-form-field appearance="fill">
+          <mat-label>Email</mat-label>
+          <input matInput type="email" formControlName="email" required>
+        </mat-form-field>
+      </div>
+      <div>
+        <mat-form-field appearance="fill">
+          <mat-label>Mot de Passe</mat-label>
+          <input matInput type="password" formControlName="password" required>
+        </mat-form-field>
+      </div>
+      <button type="submit">S'authentifier</button>
+    </form>
+  </mat-card>
+</div>

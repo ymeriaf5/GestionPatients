@@ -1,29 +1,67 @@
 <html>
+<head>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
 <body>
-<mat-toolbar color="primary">
+<mat-toolbar class="custom-toolbar">
+  <div>
+    <img src="assets/logo2.jpeg" class="logo">
+  </div>
+  <div>
+    <button mat-button routerLink="/dashboard/employees">Gestion patients</button>
+  </div>
   <button mat-icon-button (click)="drawer.toggle()">
     <mat-icon>menu</mat-icon>
   </button>
   <span class="spacer"></span>
-  <button mat-button routerLink="/home" color="primary">Home</button>
-  <button mat-button routerLink="/profile" color="primary">Profile</button>
-  <button mat-button [matMenuTriggerFor]="importMenu" color="primary">
-    Import
-    <mat-icon iconPosition="after">arrow_drop_down</mat-icon>
+  <button mat-button [matMenuTriggerFor]="userMenu" class="user-menu-button">
+      <label>Youness Meriaf</label>
+
+      <mat-icon class="menu-icon">arrow_drop_down</mat-icon>
+
   </button>
-  <mat-menu #importMenu="matMenu">
-    <button mat-menu-item>Load Students</button>
-    <button mat-menu-item>Load Payments</button>
+
+  <mat-menu #userMenu="matMenu">
+    <button mat-menu-item>
+      <mat-icon>person</mat-icon>
+      <span>Profil</span>
+    </button>
+    <button mat-menu-item>
+      <mat-icon>contact_mail</mat-icon>
+      <span>Contact</span>
+    </button>
+    <button mat-menu-item>
+      <mat-icon>help_outline</mat-icon>
+      <span>Aide</span>
+    </button>
+    <button mat-menu-item>
+      <mat-icon>exit_to_app</mat-icon>
+      <span>Deconnexion</span>
+    </button>
   </mat-menu>
-  <button mat-raised-button color="accent">Login</button>
+
 </mat-toolbar>
+
 
 <mat-drawer-container class="drawer-container">
   <mat-drawer #drawer class="drawer" mode="side" opened="true">
     <mat-nav-list>
-      <a mat-list-item routerLink="/dashboard" (click)="drawer.close()">Dashboard</a>
-      <a mat-list-item routerLink="/employes">Employee</a>
-      <a mat-list-item routerLink="/stepper" >Stepper</a>
+      <a mat-list-item routerLink="/dashboard/employees">
+        <mat-icon>person</mat-icon>
+        <span>Patient</span>
+      </a>
+      <a mat-list-item routerLink="/dashboard">
+        <mat-icon>assignment</mat-icon>
+        <span>Registre</span>
+      </a>
+      <a mat-list-item routerLink="/dashboard">
+        <mat-icon>bar_chart</mat-icon>
+        <span>Statistique</span>
+      </a>
+      <a mat-list-item routerLink="/dashboard/stepper">
+        <mat-icon>insights</mat-icon>
+        <span>Indicateur</span>
+      </a>
     </mat-nav-list>
   </mat-drawer>
 
@@ -33,5 +71,7 @@
     </div>
   </mat-drawer-content>
 </mat-drawer-container>
+
+
 </body>
 </html>

@@ -1,0 +1,23 @@
+.full-width-table {
+  width: 100%;
+}
+
+mat-toolbar {
+  margin-bottom: 20px;
+}
+
+mat-card {
+  max-width: 100%;
+}
+
+button[mat-raised-button] {
+  padding: 10px 20px;
+  border-radius: 20px;
+  width: 100px;
+}
+.button2[mat-raised-button] {
+  padding: 10px 20px;
+  border-radius:10px;
+  width: 250px;
+}
+
