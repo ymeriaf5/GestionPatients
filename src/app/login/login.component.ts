@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import {DemoListeService} from "../demo-liste-service.service";
+import { DemoListeService } from "../demo-liste-service.service";
 
 @Component({
   selector: 'app-login',
@@ -10,7 +10,10 @@ import {DemoListeService} from "../demo-liste-service.service";
 })
 export class LoginComponent {
   loginForm: FormGroup;
+  otpForm: FormGroup;
   passwordFieldType: string = 'password';
+  showOtpForm: boolean = false;
+
   constructor(
     private formBuilder: FormBuilder,
     private router: Router,
@@ -20,6 +23,9 @@ export class LoginComponent {
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required]
     });
+    this.otpForm = this.formBuilder.group({
+      otp: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(6)]]
+    });
   }
 
   onSubmit(): void {
@@ -27,8 +33,7 @@ export class LoginComponent {
       const { email, password } = this.loginForm.value;
       this.authService.authenticate(email, password).subscribe(
         response => {
-          localStorage.setItem('token', response.token); // Save token in local storage or use another method
-          this.router.navigate(['/dashboard/employees']);
+          this.showOtpForm = true;
         },
         error => {
           console.error('Authentication failed', error);
@@ -37,6 +42,25 @@ export class LoginComponent {
       );
     }
   }
+
+  onSubmitOtp(): void {
+    if (this.otpForm.valid) {
+      const otp = this.otpForm.value.otp;
+      const email = localStorage.getItem('otp-email');
+      if (email) {
+        this.authService.verifyOtp(email, otp).subscribe(
+          response => {
+            this.router.navigate(['/dashboard/employees']);
+          },
+          error => {
+            console.error('OTP verification failed', error);
+            // Handle OTP verification error (e.g., show an error message)
+          }
+        );
+      }
+    }
+  }
+
   togglePasswordVisibility(): void {
     this.passwordFieldType = this.passwordFieldType === 'password' ? 'text' : 'password';
   }

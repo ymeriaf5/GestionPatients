@@ -34,18 +34,16 @@ export class DemoListeService {
     return this.http.get<Employee[]>(`${this.apiUrl}/employees`, { headers: this.getHeaders() });
   }
 
-  addEmployee(employee: Employee): Observable<HttpResponse<string>> {
-    // @ts-ignore
-    return this.http.post<string>(`${this.apiUrl}/employees`, employee, { headers: this.getHeaders(), observe: 'response', responseType: 'text' });
+  addEmployee(employee: Employee): Observable<HttpResponse<void>> {
+    return this.http.post<void>(`${this.apiUrl}/employees`, employee, { headers: this.getHeaders(), observe: 'response' });
   }
 
-  updateEmployee(employee: Employee): Observable<void> {
-    return this.http.put<void>(`${this.apiUrl}/employees/${employee.id}`, employee, { headers: this.getHeaders() });
+  updateEmployee(employee: Employee): Observable<HttpResponse<void>> {
+    return this.http.put<void>(`${this.apiUrl}/employees/${employee.id}`, employee, { headers: this.getHeaders(), observe: 'response' });
   }
 
-  deleteEmployee(employeeId: number): Observable<HttpResponse<string>> {
-    // @ts-ignore
-    return this.http.delete<string>(`${this.apiUrl}/employees/${employeeId}`, { headers: this.getHeaders(), observe: 'response', responseType: 'text' });
+  deleteEmployee(employeeId: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/employees/${employeeId}`, { headers: this.getHeaders() });
   }
 
   getEmployeeById(id: number): Observable<Employee> {
@@ -54,6 +52,14 @@ export class DemoListeService {
 
   authenticate(email: string, password: string): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/authenticate`, { email, password })
+      .pipe(tap(response => {
+        localStorage.setItem('otp-email', email);
+        this.username = response.name; // Ensure this is correctly set
+      }));
+  }
+
+  verifyOtp(email: string, otp: string): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/verify-otp`, { email, otp })
       .pipe(tap(response => {
         localStorage.setItem('token', response.token);
         this.username = response.name; // Ensure this is correctly set

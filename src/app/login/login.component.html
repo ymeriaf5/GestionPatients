@@ -1,5 +1,6 @@
-<div class="login-container">
-  <mat-card class="login-card">
+<!-- login.component.html -->
+<div class="auth-container" *ngIf="!showOtpForm">
+  <mat-card class="auth-card">
     <img src="assets/logo3.png" class="logo-image" alt="Logo">
     <h2>Authentification</h2>
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
@@ -15,6 +16,19 @@
         </button>
       </mat-form-field>
       <button type="submit" mat-raised-button color="primary">S'authentifier</button>
+    </form>
+  </mat-card>
+</div>
+
+<div class="auth-container" *ngIf="showOtpForm">
+  <mat-card class="auth-card">
+    <h2>Enter OTP</h2>
+    <form [formGroup]="otpForm" (ngSubmit)="onSubmitOtp()">
+      <mat-form-field appearance="fill">
+        <mat-label>OTP</mat-label>
+        <input matInput formControlName="otp" required>
+      </mat-form-field>
+      <button type="submit" mat-raised-button color="primary">Verify OTP</button>
     </form>
   </mat-card>
 </div>

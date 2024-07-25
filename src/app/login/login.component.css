@@ -1,5 +1,5 @@
 /* login.component.css */
-.login-container {
+.auth-container {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -8,7 +8,7 @@
   background-size: cover;
 }
 
-.login-card {
+.auth-card {
   width: 100%;
   max-width: 400px;
   padding: 30px;
@@ -25,7 +25,7 @@
   margin-bottom: 20px;
 }
 
-.login-card h2 {
+.auth-card h2 {
   margin-bottom: 20px;
   color: #333;
   font-family: 'Arial', sans-serif;
@@ -60,10 +60,11 @@ button {
 button:hover {
   background-color: #1565c0;
 }
+
 button[mat-raised-button] {
- background-color: black;
-}
-button[mat-raised-button]:hover{
-  background-color: #1565c0;
+  background-color: black;
 }
 
+button[mat-raised-button]:hover {
+  background-color: #1565c0;
+}

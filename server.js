@@ -2,30 +2,33 @@ const http = require('http');
 const url = require('url');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
-const client=require('./db');
+const client = require('./db');
+const nodemailer = require('nodemailer');
+const speakeasy = require('speakeasy');
+
 const hostname = '127.0.0.1';
 const port = 3000;
-const SECRET_KEY = 'your-secret-key'; // Replace with a strong secret key
+const SECRET_KEY = '843567893696976453275974432697R634976R738467TR678T34865R6834R8763T478378637664538745673865783678548735687R3'; // Replace with a strong secret key
+const OTP_SECRET = speakeasy.generateSecret().base32; // Generate a strong secret key for OTP
 
-const addDefaultUser = async () => {
-  try {
-    const defaultUser = {
-      name: 'Infermier',
-      email: 'infermier@example.com',
-      password: 'admin' // Use a strong password in a real application
-    };
-
-    // Hash the default user's password
-    const hashedPassword = await bcrypt.hash(defaultUser.password, 10);
-
-    const query = 'INSERT INTO employee (name, email, password) VALUES ($1, $2, $3) RETURNING id';
-    const values = [defaultUser.name, defaultUser.email, hashedPassword];
-    const result = await client.query(query, values);
-
-    console.log(`Default user added with ID: ${result.rows[0].id}`);
-  } catch (error) {
-    console.error('Error adding default user:', error.message);
+// Configure nodemailer
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: 'younessmeriaf3@gmail.com',
+    pass: 'zkgjlvufnoltnmlr'
   }
+});
+
+// Send OTP to user's email
+const sendOtpEmail = (email, otp) => {
+  const mailOptions = {
+    from: 'younessmeriaf3@gmail.com',
+    to: email,
+    subject: 'Your OTP Code',
+    text: `Your OTP code is ${otp}`
+  };
+  return transporter.sendMail(mailOptions);
 };
 
 const authenticateUser = (req, res) => {
@@ -36,13 +39,10 @@ const authenticateUser = (req, res) => {
   req.on('end', async () => {
     try {
       const { email, password } = JSON.parse(body);
-
-      // Query the database to find the user by email
       const query = 'SELECT * FROM employee WHERE email = $1';
       const values = [email];
       const result = await client.query(query, values);
 
-      // Check if the user exists
       if (result.rows.length === 0) {
         res.statusCode = 401;
         res.setHeader('Content-Type', 'application/json');
@@ -51,8 +51,6 @@ const authenticateUser = (req, res) => {
       }
 
       const user = result.rows[0];
-
-      // Check if the password matches
       const isMatch = await bcrypt.compare(password, user.password);
       if (!isMatch) {
         res.statusCode = 401;
@@ -61,7 +59,49 @@ const authenticateUser = (req, res) => {
         return;
       }
 
-      // Generate and return the token
+      const otp = speakeasy.totp({ secret: OTP_SECRET, encoding: 'base32' });
+      await sendOtpEmail(email, otp);
+
+      res.statusCode = 200;
+      res.setHeader('Content-Type', 'application/json');
+      res.end(JSON.stringify({ email, otpSent: true }));
+    } catch (error) {
+      res.statusCode = 500;
+      res.setHeader('Content-Type', 'application/json');
+      res.end(JSON.stringify({ error: 'Error processing request', details: error.message }));
+    }
+  });
+};
+
+const verifyOtp = (req, res) => {
+  let body = '';
+  req.on('data', chunk => {
+    body += chunk.toString();
+  });
+  req.on('end', async () => {
+    try {
+      const { email, otp } = JSON.parse(body);
+      const isValid = speakeasy.totp.verify({ secret: OTP_SECRET, encoding: 'base32', token: otp, window: 1 });
+
+      if (!isValid) {
+        res.statusCode = 401;
+        res.setHeader('Content-Type', 'application/json');
+        res.end(JSON.stringify({ error: 'Invalid OTP' }));
+        return;
+      }
+
+      const query = 'SELECT * FROM employee WHERE email = $1';
+      const values = [email];
+      const result = await client.query(query, values);
+
+      if (result.rows.length === 0) {
+        res.statusCode = 401;
+        res.setHeader('Content-Type', 'application/json');
+        res.end(JSON.stringify({ error: 'User not found' }));
+        return;
+      }
+
+      const user = result.rows[0];
       const token = jwt.sign({ id: user.id, email: user.email, name: user.name }, SECRET_KEY, { expiresIn: '1h' });
 
       res.statusCode = 200;
@@ -75,125 +115,126 @@ const authenticateUser = (req, res) => {
   });
 };
 
-
-const addEmployee = (req, res) => {
-  let body = '';
-  req.on('data', chunk => {
-    body += chunk.toString();
-  });
-  req.on('end', async () => {
-    try {
-      const employee = JSON.parse(body);
-
-      // Hash the password before saving it
-      const hashedPassword = await bcrypt.hash(employee.password, 10); // Use 10 salt rounds
-
-      const query = 'INSERT INTO employee (name, email, password) VALUES ($1, $2, $3) RETURNING id';
-      const values = [employee.name, employee.email, hashedPassword];
-      const result = await client.query(query, values);
-
-      res.statusCode = 201;
-      res.setHeader('Content-Type', 'application/json');
-      res.end(JSON.stringify({ id: result.rows[0].id }));
-    } catch (error) {
-      res.statusCode = 500;
-      res.setHeader('Content-Type', 'application/json');
-      res.end(JSON.stringify({ error: 'Error processing request', details: error.message }));
-    }
-  });
-};
-
-const verifyToken = (req, res, callback) => {
+const verifyToken = (req, res, next) => {
   const authHeader = req.headers['authorization'];
-  const token = authHeader && authHeader.startsWith('Bearer ') ? authHeader.split(' ')[1] : null;
-
+  const token = authHeader && authHeader.split(' ')[1];
 
   if (!token) {
     res.statusCode = 401;
     res.setHeader('Content-Type', 'application/json');
-    return res.end(JSON.stringify({ error: 'No token provided' }));
+    res.end(JSON.stringify({ error: 'Token missing' }));
+    return;
   }
 
   jwt.verify(token, SECRET_KEY, (err, user) => {
     if (err) {
       res.statusCode = 403;
       res.setHeader('Content-Type', 'application/json');
-      return res.end(JSON.stringify({ error: 'Invalid token' }));
+      res.end(JSON.stringify({ error: 'Invalid token' }));
+      return;
     }
+
     req.user = user;
-    callback(); // Call the original route handler
+    next();
   });
 };
 
-const getEmployees = (req, res) => {
-  client.query('SELECT * FROM employee ORDER BY id', (err, result) => {
-    if (err) {
-      res.statusCode = 500;
-      res.setHeader('Content-Type', 'application/json');
-      res.end(JSON.stringify({ error: err.message }));
-    } else {
-      res.statusCode = 200;
-      res.setHeader('Content-Type', 'application/json');
-      res.end(JSON.stringify(result.rows));
-    }
-  });
+const getEmployees = async (req, res) => {
+  try {
+    const query = 'SELECT * FROM employee';
+    const result = await client.query(query);
+    res.statusCode = 200;
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify(result.rows));
+  } catch (error) {
+    res.statusCode = 500;
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify({ error: 'Error fetching employees', details: error.message }));
+  }
 };
 
-const updateEmployee = (req, res, id) => {
+const addEmployee = async (req, res) => {
   let body = '';
   req.on('data', chunk => {
     body += chunk.toString();
   });
   req.on('end', async () => {
     try {
-      const employee = JSON.parse(body);
-
-      // Hash the new password before updating it
-      const hashedPassword = await bcrypt.hash(employee.password, 10); // Use 10 salt rounds
-
-      const query = 'UPDATE employee SET name = $1, email = $2, password = $3 WHERE id = $4';
-      const values = [employee.name, employee.email, hashedPassword, id];
+      const { name, email, password } = JSON.parse(body);
+      const hashedPassword = await bcrypt.hash(password, 10);
+      const query = 'INSERT INTO employee (name, email, password) VALUES ($1, $2, $3)';
+      const values = [name, email, hashedPassword];
       await client.query(query, values);
-
-      res.statusCode = 204;
-      res.end();
+      res.statusCode = 201;
+      res.setHeader('Content-Type', 'application/json');
+      res.end(JSON.stringify({ message: 'Employee added' }));
     } catch (error) {
       res.statusCode = 500;
       res.setHeader('Content-Type', 'application/json');
-      res.end(JSON.stringify({ error: 'Error processing request', details: error.message }));
+      res.end(JSON.stringify({ error: 'Error adding employee', details: error.message }));
     }
   });
 };
 
-const deleteEmployee = (req, res, id) => {
-  const query = 'DELETE FROM employee WHERE id = $1';
-  const values = [id];
-  client.query(query, values, (err, result) => {
-    if (err) {
-      res.statusCode = 500;
-      res.setHeader('Content-Type', 'application/json');
-      res.end(JSON.stringify({ error: err.message }));
-    } else {
-      res.statusCode = 204;
-      res.end();
-    }
+const updateEmployee = async (req, res, id) => {
+  let body = '';
+  req.on('data', chunk => {
+    body += chunk.toString();
   });
-};
-
-const getEmployeeById = (req, res, id) => {
-  const query = 'SELECT * FROM employee WHERE id = $1';
-  const values = [id];
-  client.query(query, values, (err, result) => {
-    if (err) {
-      res.statusCode = 500;
-      res.setHeader('Content-Type', 'application/json');
-      res.end(JSON.stringify({ error: err.message }));
-    } else {
+  req.on('end', async () => {
+    try {
+      const { name, email, password } = JSON.parse(body);
+      const hashedPassword = password ? await bcrypt.hash(password, 10) : undefined;
+      const query = 'UPDATE employee SET name = $1, email = $2, password = $3 WHERE id = $4';
+      const values = [name, email, hashedPassword, id];
+      await client.query(query, values);
       res.statusCode = 200;
       res.setHeader('Content-Type', 'application/json');
-      res.end(JSON.stringify(result.rows[0]));
+      res.end(JSON.stringify({ message: 'Employee updated' }));
+    } catch (error) {
+      res.statusCode = 500;
+      res.setHeader('Content-Type', 'application/json');
+      res.end(JSON.stringify({ error: 'Error updating employee', details: error.message }));
     }
   });
+};
+
+const deleteEmployee = async (req, res, id) => {
+  try {
+    const query = 'DELETE FROM employee WHERE id = $1';
+    const values = [id];
+    await client.query(query, values);
+    res.statusCode = 200;
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify({ message: 'Employee deleted' }));
+  } catch (error) {
+    res.statusCode = 500;
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify({ error: 'Error deleting employee', details: error.message }));
+  }
+};
+
+const getEmployeeById = async (req, res, id) => {
+  try {
+    const query = 'SELECT * FROM employee WHERE id = $1';
+    const values = [id];
+    const result = await client.query(query, values);
+
+    if (result.rows.length === 0) {
+      res.statusCode = 404;
+      res.setHeader('Content-Type', 'application/json');
+      res.end(JSON.stringify({ error: 'Employee not found' }));
+      return;
+    }
+
+    res.statusCode = 200;
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify(result.rows[0]));
+  } catch (error) {
+    res.statusCode = 500;
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify({ error: 'Error fetching employee', details: error.message }));
+  }
 };
 
 const server = http.createServer((req, res) => {
@@ -215,6 +256,8 @@ const server = http.createServer((req, res) => {
 
   if (pathname === '/api/authenticate' && method === 'POST') {
     authenticateUser(req, res);
+  } else if (pathname === '/api/verify-otp' && method === 'POST') {
+    verifyOtp(req, res);
   } else if (pathname === '/api/employees' && method === 'GET') {
     verifyToken(req, res, () => getEmployees(req, res));
   } else if (pathname === '/api/employees' && method === 'POST') {
@@ -235,8 +278,7 @@ const server = http.createServer((req, res) => {
   }
 });
 
-
 server.listen(port, hostname, async () => {
   console.log(`Server running at http://${hostname}:${port}/`);
-  await addDefaultUser();
+  //await addDefaultUser();
 });
