@@ -1,3 +1,4 @@
+/* login.component.css */
 .login-container {
   display: flex;
   justify-content: center;
@@ -36,6 +37,14 @@ mat-form-field {
   margin-bottom: 20px;
 }
 
+button[mat-icon-button] {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1;
+}
+
 button {
   width: 100%;
   color: white;
@@ -49,5 +58,12 @@ button {
 }
 
 button:hover {
-  background: darkblue;
+  background-color: #1565c0;
 }
+button[mat-raised-button] {
+ background-color: black;
+}
+button[mat-raised-button]:hover{
+  background-color: #1565c0;
+}
+
