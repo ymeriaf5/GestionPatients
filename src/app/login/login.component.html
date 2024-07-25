@@ -22,13 +22,13 @@
 
 <div class="auth-container" *ngIf="showOtpForm">
   <mat-card class="auth-card">
-    <h2>Enter OTP</h2>
+    <h2>Entrer le code de verification </h2>
     <form [formGroup]="otpForm" (ngSubmit)="onSubmitOtp()">
       <mat-form-field appearance="fill">
-        <mat-label>OTP</mat-label>
+        <mat-label>Code</mat-label>
         <input matInput formControlName="otp" required>
       </mat-form-field>
-      <button type="submit" mat-raised-button color="primary">Verify OTP</button>
+      <button type="submit" mat-raised-button color="primary">Envoyer</button>
     </form>
   </mat-card>
 </div>
