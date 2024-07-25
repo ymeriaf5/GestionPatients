@@ -2,7 +2,7 @@ const http = require('http');
 const url = require('url');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
-const client = require('./db');
+const pool = require('./db');
 const nodemailer = require('nodemailer');
 const speakeasy = require('speakeasy');
 
@@ -31,7 +31,7 @@ const sendOtpEmail = (email, otp) => {
   return transporter.sendMail(mailOptions);
 };
 
-const authenticateUser = (req, res) => {
+const authenticateUser = async (req, res) => {
   let body = '';
   req.on('data', chunk => {
     body += chunk.toString();
@@ -39,18 +39,17 @@ const authenticateUser = (req, res) => {
   req.on('end', async () => {
     try {
       const { email, password } = JSON.parse(body);
-      const query = 'SELECT * FROM employee WHERE email = $1';
-      const values = [email];
-      const result = await client.query(query, values);
+      const query = 'SELECT * FROM employee WHERE email = ?';
+      const [rows] = await pool.query(query, [email]);
 
-      if (result.rows.length === 0) {
+      if (rows.length === 0) {
         res.statusCode = 401;
         res.setHeader('Content-Type', 'application/json');
         res.end(JSON.stringify({ error: 'User not found' }));
         return;
       }
 
-      const user = result.rows[0];
+      const user = rows[0];
       const isMatch = await bcrypt.compare(password, user.password);
       if (!isMatch) {
         res.statusCode = 401;
@@ -73,7 +72,7 @@ const authenticateUser = (req, res) => {
   });
 };
 
-const verifyOtp = (req, res) => {
+const verifyOtp = async (req, res) => {
   let body = '';
   req.on('data', chunk => {
     body += chunk.toString();
@@ -90,18 +89,17 @@ const verifyOtp = (req, res) => {
         return;
       }
 
-      const query = 'SELECT * FROM employee WHERE email = $1';
-      const values = [email];
-      const result = await client.query(query, values);
+      const query = 'SELECT * FROM employee WHERE email = ?';
+      const [rows] = await pool.query(query, [email]);
 
-      if (result.rows.length === 0) {
+      if (rows.length === 0) {
         res.statusCode = 401;
         res.setHeader('Content-Type', 'application/json');
         res.end(JSON.stringify({ error: 'User not found' }));
         return;
       }
 
-      const user = result.rows[0];
+      const user = rows[0];
       const token = jwt.sign({ id: user.id, email: user.email, name: user.name }, SECRET_KEY, { expiresIn: '1h' });
 
       res.statusCode = 200;
@@ -142,10 +140,10 @@ const verifyToken = (req, res, next) => {
 const getEmployees = async (req, res) => {
   try {
     const query = 'SELECT * FROM employee';
-    const result = await client.query(query);
+    const [rows] = await pool.query(query);
     res.statusCode = 200;
     res.setHeader('Content-Type', 'application/json');
-    res.end(JSON.stringify(result.rows));
+    res.end(JSON.stringify(rows));
   } catch (error) {
     res.statusCode = 500;
     res.setHeader('Content-Type', 'application/json');
@@ -162,9 +160,9 @@ const addEmployee = async (req, res) => {
     try {
       const { name, email, password } = JSON.parse(body);
       const hashedPassword = await bcrypt.hash(password, 10);
-      const query = 'INSERT INTO employee (name, email, password) VALUES ($1, $2, $3)';
+      const query = 'INSERT INTO employee (name, email, password) VALUES (?, ?, ?)';
       const values = [name, email, hashedPassword];
-      await client.query(query, values);
+      await pool.query(query, values);
       res.statusCode = 201;
       res.setHeader('Content-Type', 'application/json');
       res.end(JSON.stringify({ message: 'Employee added' }));
@@ -185,9 +183,9 @@ const updateEmployee = async (req, res, id) => {
     try {
       const { name, email, password } = JSON.parse(body);
       const hashedPassword = password ? await bcrypt.hash(password, 10) : undefined;
-      const query = 'UPDATE employee SET name = $1, email = $2, password = $3 WHERE id = $4';
+      const query = 'UPDATE employee SET name = ?, email = ?, password = ? WHERE id = ?';
       const values = [name, email, hashedPassword, id];
-      await client.query(query, values);
+      await pool.query(query, values);
       res.statusCode = 200;
       res.setHeader('Content-Type', 'application/json');
       res.end(JSON.stringify({ message: 'Employee updated' }));
@@ -201,9 +199,9 @@ const updateEmployee = async (req, res, id) => {
 
 const deleteEmployee = async (req, res, id) => {
   try {
-    const query = 'DELETE FROM employee WHERE id = $1';
+    const query = 'DELETE FROM employee WHERE id = ?';
     const values = [id];
-    await client.query(query, values);
+    await pool.query(query, values);
     res.statusCode = 200;
     res.setHeader('Content-Type', 'application/json');
     res.end(JSON.stringify({ message: 'Employee deleted' }));
@@ -216,11 +214,11 @@ const deleteEmployee = async (req, res, id) => {
 
 const getEmployeeById = async (req, res, id) => {
   try {
-    const query = 'SELECT * FROM employee WHERE id = $1';
+    const query = 'SELECT * FROM employee WHERE id = ?';
     const values = [id];
-    const result = await client.query(query, values);
+    const [rows] = await pool.query(query, values);
 
-    if (result.rows.length === 0) {
+    if (rows.length === 0) {
       res.statusCode = 404;
       res.setHeader('Content-Type', 'application/json');
       res.end(JSON.stringify({ error: 'Employee not found' }));
@@ -229,11 +227,32 @@ const getEmployeeById = async (req, res, id) => {
 
     res.statusCode = 200;
     res.setHeader('Content-Type', 'application/json');
-    res.end(JSON.stringify(result.rows[0]));
+    res.end(JSON.stringify(rows[0]));
   } catch (error) {
     res.statusCode = 500;
     res.setHeader('Content-Type', 'application/json');
     res.end(JSON.stringify({ error: 'Error fetching employee', details: error.message }));
+  }
+};
+
+const addDefaultUser = async (name, email, password) => {
+  try {
+    const query = 'SELECT * FROM employee WHERE email = ?';
+    const values = [email];
+    const [rows] = await pool.query(query, values);
+
+    if (rows.length === 0) {
+      // No default user found, add one
+      const hashedPassword = await bcrypt.hash(password, 10);
+      const insertQuery = 'INSERT INTO employee (name, email, password) VALUES (?, ?, ?)';
+      const insertValues = [name, email, hashedPassword];
+      await pool.query(insertQuery, insertValues);
+      console.log('Default user added');
+    } else {
+      console.log('Default user already exists');
+    }
+  } catch (error) {
+    console.error('Error adding default user:', error.message);
   }
 };
 
@@ -280,5 +299,5 @@ const server = http.createServer((req, res) => {
 
 server.listen(port, hostname, async () => {
   console.log(`Server running at http://${hostname}:${port}/`);
-  //await addDefaultUser();
+  await addDefaultUser('Youness Meriaf', 'youness.meriaf@uit.ac.ma', 'admin');
 });
