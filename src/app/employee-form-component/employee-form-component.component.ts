@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DemoListeService } from '../demo-liste-service.service';
-import { Employee } from '../employee';
+import { Employee } from '../model/employee';
 
 @Component({
   selector: 'app-employee-form-component',

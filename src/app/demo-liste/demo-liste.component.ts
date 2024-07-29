@@ -1,6 +1,6 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {DemoService} from "./demo-service.service";
-import {Employee} from "../employee";
+import {Employee} from "../model/employee";
 import {DemoListeService} from "../demo-liste-service.service";
 import {HttpErrorResponse} from "@angular/common/http";
 import {MatTableDataSource} from "@angular/material/table";

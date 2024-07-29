@@ -256,6 +256,198 @@ const addDefaultUser = async (name, email, password) => {
   }
 };
 
+//Patient
+
+const getPatients = async (req, res) => {
+  try {
+    const query = `
+      SELECT
+        p.id,
+        p.nom,
+        p.prenom,
+        p.cin,
+        p.sexe,
+        p.adresse,
+        p.telephone,
+        p.date_naissance,
+        c.type AS couverture_type,
+        pr.nom AS provenance_nom,
+        a.nom AS antecedent_nom
+      FROM
+        GestionPatient.patient p
+          JOIN GestionPatient.couverture c ON p.couverture_id = c.id
+          JOIN GestionPatient.provenance pr ON p.provenance_id = pr.id
+          JOIN GestionPatient.antecedent a ON p.antecedent_id = a.id
+      ORDER BY
+        p.id;
+
+    `;
+    const [rows] = await pool.query(query);
+    res.statusCode = 200;
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify(rows));
+  } catch (error) {
+    res.statusCode = 500;
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify({ error: 'Error fetching patients', details: error.message }));
+  }
+};
+const addPatient = async (req, res) => {
+  let body = '';
+  req.on('data', chunk => {
+    body += chunk.toString();
+  });
+  req.on('end', async () => {
+    try {
+      const { antecedent_id, couverture_id, date_naissance, provenance_id, adresse, nom, prenom, cin, sexe, telephone } = JSON.parse(body);
+
+      // Insert patient into the database
+      const query = 'INSERT INTO patient (antecedent_id, couverture_id, date_naissance, provenance_id, adresse, nom, prenom, cin, sexe, telephone) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+      const values = [antecedent_id, couverture_id, date_naissance, provenance_id, adresse, nom, prenom, cin, sexe, telephone];
+      await pool.query(query, values);
+
+      res.statusCode = 201;
+      res.setHeader('Content-Type', 'application/json');
+      res.end(JSON.stringify({ message: 'Patient added successfully' }));
+    } catch (error) {
+      console.error('Error Details:', error);
+      res.statusCode = 500;
+      res.setHeader('Content-Type', 'application/json');
+      res.end(JSON.stringify({ error: 'Error adding patient', details: error.message }));
+    }
+  });
+};
+
+const updatePatient = async (req, res, id) => {
+  let body = '';
+
+  req.on('data', chunk => {
+    body += chunk.toString();
+  });
+
+  req.on('end', async () => {
+    try {
+      const { antecedent_id, couverture_id, date_naissance, provenance_id, adresse, nom, prenom, cin, sexe, telephone } = JSON.parse(body);
+      const query = `
+        UPDATE patient
+        SET antecedent_id = ?, couverture_id = ?, date_naissance = ?, provenance_id = ?, adresse = ?, nom = ?, prenom = ?, cin = ?, sexe = ?, telephone = ?
+        WHERE id = ?
+      `;
+      const values = [antecedent_id, couverture_id, date_naissance, provenance_id, adresse, nom, prenom, cin, sexe, telephone, id];
+      await pool.query(query, values);
+
+      res.statusCode = 201;
+      res.setHeader('Content-Type', 'application/json');
+      res.end(JSON.stringify({ message: 'Patient added successfully' }));
+    } catch (error) {
+      console.error('Error Details:', error);
+      res.statusCode = 500;
+      res.setHeader('Content-Type', 'application/json');
+      res.end(JSON.stringify({ error: 'Error adding patient', details: error.message }));
+    }
+  });
+};
+
+
+const deletePatient = async (req, res, id) => {
+  try {
+    const query = 'DELETE FROM patient WHERE id = ?';
+    const values = [id];
+    await pool.query(query, values);
+    res.statusCode = 200;
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify({ message: 'Patient deleted' }));
+  } catch (error) {
+    res.statusCode = 500;
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify({ error: 'Error deleting patient', details: error.message }));
+  }
+};
+
+const getPatientById = async (req, res, id) => {
+  try {
+    const query = 'SELECT * FROM patient WHERE id = ?';
+    const values = [id];
+    const [rows] = await pool.query(query, values);
+
+    if (rows.length === 0) {
+      res.statusCode = 404;
+      res.setHeader('Content-Type', 'application/json');
+      res.end(JSON.stringify({ error: 'Patient not found' }));
+      return;
+    }
+
+    res.statusCode = 200;
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify(rows[0]));
+  } catch (error) {
+    res.statusCode = 500;
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify({ error: 'Error fetching patient', details: error.message }));
+  }
+};
+const addDefaultPatient = async (antecedent_id, couverture_id, date_naissance, provenance_id, adresse, nom, prenom, cin, sexe, telephone) => {
+  try {
+    // Check if the patient already exists by CIN (or any other unique identifier)
+    const query = 'SELECT * FROM patient WHERE cin = ?';
+    const [rows] = await pool.query(query, [cin]);
+
+    if (rows.length === 0) {
+      // Insert the default patient if they do not already exist
+      const insertQuery = 'INSERT INTO patient (antecedent_id, couverture_id, date_naissance, provenance_id, adresse, nom, prenom, cin, sexe, telephone) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+      const values = [antecedent_id, couverture_id, date_naissance, provenance_id, adresse, nom, prenom, cin, sexe, telephone];
+      await pool.query(insertQuery, values);
+      console.log('Default patient added');
+    } else {
+      console.log('Default patient already exists');
+    }
+  } catch (error) {
+    console.error('Error adding default patient:', error.message);
+  }
+};
+const getAntecedents = async (req, res) => {
+  try {
+    const query = 'SELECT * FROM antecedent';
+    const [rows] = await pool.query(query);
+    res.statusCode = 200;
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify(rows));
+  } catch (error) {
+    res.statusCode = 500;
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify({ error: 'Error fetching antecedents', details: error.message }));
+  }
+};
+
+const getCouvertures = async (req, res) => {
+  try {
+    const query = 'SELECT * FROM couverture';
+    const [rows] = await pool.query(query);
+    res.statusCode = 200;
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify(rows));
+  } catch (error) {
+    res.statusCode = 500;
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify({ error: 'Error fetching couvertures', details: error.message }));
+  }
+};
+
+const getProvenances = async (req, res) => {
+  try {
+    const query = 'SELECT * FROM provenance';
+    const [rows] = await pool.query(query);
+    res.statusCode = 200;
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify(rows));
+  } catch (error) {
+    res.statusCode = 500;
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify({ error: 'Error fetching provenances', details: error.message }));
+  }
+};
+
+
 const server = http.createServer((req, res) => {
   const reqUrl = url.parse(req.url, true);
   const method = req.method.toUpperCase();
@@ -290,7 +482,26 @@ const server = http.createServer((req, res) => {
   } else if (pathname.startsWith('/api/employees/') && method === 'GET') {
     const id = pathname.split('/')[3];
     verifyToken(req, res, () => getEmployeeById(req, res, id));
-  } else {
+  }else if (pathname === '/api/patients' && method === 'GET') {
+    verifyToken(req, res, () => getPatients(req, res));
+  } else if (pathname === '/api/patients' && method === 'POST') {
+    verifyToken(req, res, () => addPatient(req, res));
+  } else if (pathname.startsWith('/api/patients/') && method === 'PUT') {
+    const id = pathname.split('/')[3];
+    verifyToken(req, res, () => updatePatient(req, res, id));
+  } else if (pathname.startsWith('/api/patients/') && method === 'DELETE') {
+    const id = pathname.split('/')[3];
+    verifyToken(req, res, () => deletePatient(req, res, id));
+  } else if (pathname.startsWith('/api/patients/') && method === 'GET') {
+    const id = pathname.split('/')[3];
+    verifyToken(req, res, () => getPatientById(req, res, id));
+  }else if (pathname === '/api/antecedents' && method === 'GET') {
+    verifyToken(req, res, () => getAntecedents(req, res));
+  } else if (pathname === '/api/couvertures' && method === 'GET') {
+    verifyToken(req, res, () => getCouvertures(req, res));
+  } else if (pathname === '/api/provenances' && method === 'GET') {
+    verifyToken(req, res, () => getProvenances(req, res));
+  }else {
     res.statusCode = 404;
     res.setHeader('Content-Type', 'text/plain');
     res.end('Not Found');
@@ -299,5 +510,6 @@ const server = http.createServer((req, res) => {
 
 server.listen(port, hostname, async () => {
   console.log(`Server running at http://${hostname}:${port}/`);
-  await addDefaultUser('Youness Meriaf', 'youness.meriaf@uit.ac.ma', 'admin');
+  //await addDefaultUser('Youness Meriaf', 'youness.meriaf@uit.ac.ma', 'admin');
+  //await addDefaultPatient(1, 1, '2000-01-01', 1, '123 Main St', 'Doe', 'John', 'CD6100', 'M', '555-1234');
 });

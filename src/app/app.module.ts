@@ -31,6 +31,9 @@ import { LoginComponent } from './login/login.component';
 import {MatTabLabel} from "@angular/material/tabs";
 import {MatSortModule} from "@angular/material/sort";
 import {MatSelectModule} from "@angular/material/select";
+import { ListePatientComponent } from './liste-patient/liste-patient.component';
+import { AddPatientComponent } from './add-patient/add-patient.component';
+import { UpdatePatientComponent } from './update-patient/update-patient.component';
 
 @NgModule({
   declarations: [
@@ -40,7 +43,10 @@ import {MatSelectModule} from "@angular/material/select";
     AddEmployeeComponent,
     EmployeeFormComponentComponent,
     StepperComponent,
-    LoginComponent
+    LoginComponent,
+    ListePatientComponent,
+    AddPatientComponent,
+    UpdatePatientComponent
   ],
     imports: [
         BrowserModule,

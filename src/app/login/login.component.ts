@@ -50,7 +50,7 @@ export class LoginComponent {
       if (email) {
         this.authService.verifyOtp(email, otp).subscribe(
           response => {
-            this.router.navigate(['/dashboard/employees']);
+            this.router.navigate(['/dashboard/patients']);
           },
           error => {
             console.error('OTP verification failed', error);

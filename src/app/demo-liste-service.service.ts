@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
-import { Employee } from './employee';
+import { Employee } from './model/employee';
+import {Patient} from "./model/patient";
+import {Patient_show} from "./model/patient_show";
 
 @Injectable({
   providedIn: 'root'
@@ -29,6 +31,7 @@ export class DemoListeService {
 
     return headers;
   }
+  //employee
 
   getEmployees(): Observable<Employee[]> {
     return this.http.get<Employee[]>(`${this.apiUrl}/employees`, { headers: this.getHeaders() });
@@ -48,6 +51,40 @@ export class DemoListeService {
 
   getEmployeeById(id: number): Observable<Employee> {
     return this.http.get<Employee>(`${this.apiUrl}/employees/${id}`, { headers: this.getHeaders() });
+  }
+  // Patient methods
+  getPatients(): Observable<Patient_show[]> {
+    return this.http.get<Patient_show[]>(`${this.apiUrl}/patients`, { headers: this.getHeaders() });
+  }
+
+  addPatient(patient: Patient): Observable<HttpResponse<void>> {
+    return this.http.post<void>(`${this.apiUrl}/patients`, patient, { headers: this.getHeaders(), observe: 'response' });
+  }
+  // Fetch antecedents
+  getAntecedents(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/antecedents`, { headers: this.getHeaders() });
+  }
+
+  // Fetch couvertures
+  getCouvertures(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/couvertures`, { headers: this.getHeaders() });
+  }
+
+  // Fetch provenances
+  getProvenances(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/provenances`, { headers: this.getHeaders() });
+  }
+
+  updatePatient(patient: Patient): Observable<HttpResponse<void>> {
+    return this.http.put<void>(`${this.apiUrl}/patients/${patient.id}`, patient, { headers: this.getHeaders(), observe: 'response' });
+  }
+
+  deletePatient(patientId: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/patients/${patientId}`, { headers: this.getHeaders() });
+  }
+
+  getPatientById(id: number): Observable<Patient> {
+    return this.http.get<Patient>(`${this.apiUrl}/patients/${id}`, { headers: this.getHeaders() });
   }
 
   authenticate(email: string, password: string): Observable<any> {
