@@ -5,6 +5,8 @@ import { MatSort } from '@angular/material/sort';
 import { Patient_show } from '../model/patient_show';
 import { HttpErrorResponse } from '@angular/common/http';
 import { DemoListeService } from "../demo-liste-service.service";
+import {MatDialog} from "@angular/material/dialog";
+import {ConsultationComponent} from "../consultation/consultation.component";
 
 @Component({
   selector: 'app-liste-patient',
@@ -36,7 +38,10 @@ export class ListePatientComponent implements OnInit {
     adresse: 'adresse'
   };
 
-  constructor(private patientService: DemoListeService) {}
+  constructor(
+    private patientService: DemoListeService,
+    public dialog: MatDialog
+    ) {}
 
   ngOnInit(): void {
     this.getPatients();
@@ -79,5 +84,15 @@ export class ListePatientComponent implements OnInit {
         console.error('Error deleting patient:', error);
       }
     );
+  }
+  openDetailsDialog(patientId: number): void {
+    const dialogRef = this.dialog.open(ConsultationComponent, {
+      width: '80%',
+      data: { id: patientId } // pass patient ID or other data if needed
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+    });
   }
 }

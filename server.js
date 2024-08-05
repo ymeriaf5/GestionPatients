@@ -446,6 +446,91 @@ const getProvenances = async (req, res) => {
     res.end(JSON.stringify({ error: 'Error fetching provenances', details: error.message }));
   }
 };
+const addConsultation = async (req, res) => {
+  let body = '';
+
+  req.on('data', chunk => {
+    body += chunk.toString();
+  });
+  console.log("hi");
+
+  req.on('end', async () => {
+    try {
+      const {
+        dateConsultation,
+        prestataire,
+        motifConsultation,
+        signesFonctionnels,
+        signesPhysiques,
+        diagnostics,
+        examensParacliniques,
+        resultatsExamens,
+        traitementsPrescrits,
+        posologie,
+        recommandations,
+        referenceInfo,
+        prochainRendezVous,
+        remarquesSuivi,
+        patientId // Assume patientId is used to associate with the Patient table
+      } = JSON.parse(body);
+
+      // Convert date values to the correct format for MySQL
+      const formattedDateConsultation = new Date(dateConsultation).toISOString().slice(0, 19).replace('T', ' ');
+      const formattedProchainRendezVous = new Date(prochainRendezVous).toISOString().slice(0, 19).replace('T', ' ');
+
+      // Insert consultation into the database
+      const query = `
+        INSERT INTO consultation (
+          date_Consultation,
+          prestataire,
+          motif_Consultation,
+          signes_Fonctionnels,
+          signes_Physiques,
+          diagnostics,
+          examens_Paracliniques,
+          resultats_Examens,
+          traitements_Prescrits,
+          posologie,
+          recommandations,
+          reference_Info,
+          prochain_Rendez_Vous,
+          remarques_Suivi,
+          patient_id
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      `;
+      const values = [
+        formattedDateConsultation, prestataire, motifConsultation, signesFonctionnels,
+        signesPhysiques, diagnostics, examensParacliniques, resultatsExamens,
+        traitementsPrescrits, posologie, recommandations, referenceInfo,
+        formattedProchainRendezVous, remarquesSuivi, patientId
+      ];
+      await pool.query(query, values);
+
+      res.statusCode = 201;
+      res.setHeader('Content-Type', 'application/json');
+      res.end(JSON.stringify({ message: 'Consultation added successfully' }));
+    } catch (error) {
+      console.error('Error Details:', error);
+      res.statusCode = 500;
+      res.setHeader('Content-Type', 'application/json');
+      res.end(JSON.stringify({ error: 'Error adding consultation', details: error.message }));
+    }
+  });
+};
+const getConsultationsById = async (req, res, id) => {
+  try {
+    const query = 'SELECT * FROM consultation where patient_id= ?';
+    const values = [id];
+    const [rows] = await pool.query(query, values);
+    res.statusCode = 200;
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify(rows));
+  } catch (error) {
+    res.statusCode = 500;
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify({ error: 'Error fetching Consultation', details: error.message }));
+  }
+};
 
 
 const server = http.createServer((req, res) => {
@@ -501,7 +586,15 @@ const server = http.createServer((req, res) => {
     verifyToken(req, res, () => getCouvertures(req, res));
   } else if (pathname === '/api/provenances' && method === 'GET') {
     verifyToken(req, res, () => getProvenances(req, res));
-  }else {
+  }else if (pathname === '/api/consultations' && method === 'POST') {
+    verifyToken(req, res, () => addConsultation(req, res));
+  } else if (pathname.startsWith('/api/consultations/') && method === 'PUT') {
+    const id = pathname.split('/')[3];
+    verifyToken(req, res, () => updateConsultation(req, res, id));
+  }else if (pathname.startsWith('/api/consultations/') && method === 'GET') {
+    const id = pathname.split('/')[3];
+    verifyToken(req, res, () => getConsultationsById(req, res, id));
+  } else {
     res.statusCode = 404;
     res.setHeader('Content-Type', 'text/plain');
     res.end('Not Found');

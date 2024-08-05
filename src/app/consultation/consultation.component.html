@@ -1,0 +1,237 @@
+<h2 mat-dialog-title class="dialog-title">Consultation</h2>
+
+<mat-dialog-content>
+  <ng-container *ngIf="!showStepper">
+    <div class="action-container">
+      <button mat-raised-button color="primary" (click)="onAddConsultationClick()">Ajouter une Consultation</button>
+    </div>
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+      <!-- Date Consultation Column -->
+      <ng-container matColumnDef="date_Consultation">
+        <th mat-header-cell *matHeaderCellDef>Date de Consultation</th>
+        <td mat-cell *matCellDef="let element">{{element.date_consultation | date}}</td>
+      </ng-container>
+
+      <!-- Prestataire Column -->
+      <ng-container matColumnDef="prestataire">
+        <th mat-header-cell *matHeaderCellDef>Prestataire</th>
+        <td mat-cell *matCellDef="let element">{{element.prestataire}}</td>
+      </ng-container>
+
+      <!-- Motif Consultation Column -->
+      <ng-container matColumnDef="motif_Consultation">
+        <th mat-header-cell *matHeaderCellDef>Motif de Consultation</th>
+        <td mat-cell *matCellDef="let element">{{element.motif_consultation}}</td>
+      </ng-container>
+
+      <!-- Signes Fonctionnels Column -->
+      <ng-container matColumnDef="signes_Fonctionnels">
+        <th mat-header-cell *matHeaderCellDef>Signes Fonctionnels</th>
+        <td mat-cell *matCellDef="let element">{{element.signes_fonctionnels}}</td>
+      </ng-container>
+
+      <!-- Signes Physiques Column -->
+      <ng-container matColumnDef="signes_Physiques">
+        <th mat-header-cell *matHeaderCellDef>Signes Physiques</th>
+        <td mat-cell *matCellDef="let element">{{element.signes_physiques}}</td>
+      </ng-container>
+
+      <!-- Diagnostics Column -->
+      <ng-container matColumnDef="diagnostics">
+        <th mat-header-cell *matHeaderCellDef>Diagnostics</th>
+        <td mat-cell *matCellDef="let element">{{element.diagnostics}}</td>
+      </ng-container>
+
+      <!-- Examens Paracliniques Column -->
+      <ng-container matColumnDef="examens_Paracliniques">
+        <th mat-header-cell *matHeaderCellDef>Examens Paracliniques</th>
+        <td mat-cell *matCellDef="let element">{{element.examens_paracliniques}}</td>
+      </ng-container>
+
+      <!-- Résultats Examens Column -->
+      <ng-container matColumnDef="resultats_Examens">
+        <th mat-header-cell *matHeaderCellDef>Résultats Examens</th>
+        <td mat-cell *matCellDef="let element">{{element.resultats_examens}}</td>
+      </ng-container>
+
+      <!-- Traitements Prescrits Column -->
+      <ng-container matColumnDef="traitements_Prescrits">
+        <th mat-header-cell *matHeaderCellDef>Traitements Prescrits</th>
+        <td mat-cell *matCellDef="let element">{{element.traitements_prescrits}}</td>
+      </ng-container>
+
+      <!-- Posologie Column -->
+      <ng-container matColumnDef="posologie">
+        <th mat-header-cell *matHeaderCellDef>Posologie</th>
+        <td mat-cell *matCellDef="let element">{{element.posologie}}</td>
+      </ng-container>
+
+      <!-- Recommandations Column -->
+      <ng-container matColumnDef="recommandations">
+        <th mat-header-cell *matHeaderCellDef>Recommandations</th>
+        <td mat-cell *matCellDef="let element">{{element.recommandations}}</td>
+      </ng-container>
+
+      <!-- Références Column -->
+      <ng-container matColumnDef="reference_Info">
+        <th mat-header-cell *matHeaderCellDef>Références</th>
+        <td mat-cell *matCellDef="let element">{{element.reference_info}}</td>
+      </ng-container>
+
+      <!-- Prochain Rendez-vous Column -->
+      <ng-container matColumnDef="prochain_Rendez_Vous">
+        <th mat-header-cell *matHeaderCellDef>Prochain Rendez-vous</th>
+        <td mat-cell *matCellDef="let element">{{element.prochain_rendez_vous | date}}</td>
+      </ng-container>
+
+      <!-- Remarques Suivi Column -->
+      <ng-container matColumnDef="remarques_Suivi">
+        <th mat-header-cell *matHeaderCellDef>Remarques Suivi</th>
+        <td mat-cell *matCellDef="let element">{{element.remarques_suivi}}</td>
+      </ng-container>
+
+      <!-- Header and Row Definitions -->
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+    </table>
+  </ng-container>
+
+  <ng-container *ngIf="showStepper">
+    <mat-horizontal-stepper linear>
+      <!-- Étape 2 : Détails de la consultation -->
+      <mat-step [stepControl]="consultationFormGroup">
+        <form [formGroup]="consultationFormGroup">
+          <ng-template matStepLabel>Détails de la consultation</ng-template>
+          <mat-form-field appearance="fill">
+            <mat-label>Date de Consultation</mat-label>
+            <input matInput [matDatepicker]="picker1" formControlName="dateConsultation" required>
+            <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+            <mat-datepicker #picker1></mat-datepicker>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill">
+            <mat-label>Prestataire</mat-label>
+            <input matInput placeholder="Nom du Prestataire" formControlName="prestataire" required>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill">
+            <mat-label>Motif de Consultation</mat-label>
+            <textarea matInput placeholder="Raison de la consultation" formControlName="motifConsultation" required></textarea>
+          </mat-form-field>
+
+          <div class="button-group">
+            <button mat-button matStepperPrevious>Retour</button>
+            <button mat-button matStepperNext>Suivant</button>
+          </div>
+        </form>
+      </mat-step>
+
+      <!-- Étape 3 : Examen clinique -->
+      <mat-step [stepControl]="clinicalFormGroup">
+        <form [formGroup]="clinicalFormGroup">
+          <ng-template matStepLabel>Examen clinique</ng-template>
+          <mat-form-field appearance="fill" class="small-form-field">
+            <mat-label>Signes Fonctionnels</mat-label>
+            <textarea matInput placeholder="Signes fonctionnels observés" formControlName="signesFonctionnels" required></textarea>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill" class="small-form-field">
+            <mat-label>Signes Physiques</mat-label>
+            <textarea matInput placeholder="Signes physiques observés" formControlName="signesPhysiques" required></textarea>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill" class="small-form-field">
+            <mat-label>Diagnostics</mat-label>
+            <textarea matInput placeholder="Diagnostics" formControlName="diagnostics" required></textarea>
+          </mat-form-field>
+
+          <div class="button-group">
+            <button mat-button matStepperPrevious>Retour</button>
+            <button mat-button matStepperNext>Suivant</button>
+          </div>
+        </form>
+      </mat-step>
+
+      <!-- Étape 4 : Examen paraclinique -->
+      <mat-step [stepControl]="paraclinicalFormGroup">
+        <form [formGroup]="paraclinicalFormGroup">
+          <ng-template matStepLabel>Examen paraclinique</ng-template>
+          <mat-form-field appearance="fill" class="small-form-field">
+            <mat-label>Examens Paracliniques</mat-label>
+            <textarea matInput placeholder="Détails des examens paracliniques" formControlName="examensParacliniques" required></textarea>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill" class="small-form-field">
+            <mat-label>Résultats des Examens</mat-label>
+            <textarea matInput placeholder="Résultats obtenus des examens paracliniques" formControlName="resultatsExamens" required></textarea>
+          </mat-form-field>
+
+          <div class="button-group">
+            <button mat-button matStepperPrevious>Retour</button>
+            <button mat-button matStepperNext>Suivant</button>
+          </div>
+        </form>
+      </mat-step>
+
+      <!-- Étape 5 : Plan de traitement -->
+      <mat-step [stepControl]="treatmentFormGroup">
+        <form [formGroup]="treatmentFormGroup">
+          <ng-template matStepLabel>Plan de traitement</ng-template>
+          <mat-form-field appearance="fill" class="small-form-field">
+            <mat-label>Traitements Prescrits</mat-label>
+            <textarea matInput placeholder="Médicaments et autres traitements prescrits" formControlName="traitementsPrescrits" required></textarea>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill" class="small-form-field">
+            <mat-label>Posologie</mat-label>
+            <textarea matInput placeholder="Posologie des traitements" formControlName="posologie" required></textarea>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill" class="small-form-field">
+            <mat-label>Recommandations</mat-label>
+            <textarea matInput placeholder="Recommandations supplémentaires" formControlName="recommandations" required></textarea>
+          </mat-form-field>
+
+          <div class="button-group">
+            <button mat-button matStepperPrevious>Retour</button>
+            <button mat-button matStepperNext>Suivant</button>
+          </div>
+        </form>
+      </mat-step>
+
+      <!-- Étape 6 : Suivi et recommandations -->
+      <mat-step [stepControl]="followUpFormGroup">
+        <form [formGroup]="followUpFormGroup">
+          <ng-template matStepLabel>Suivi et recommandations</ng-template>
+          <mat-form-field appearance="fill" class="small-form-field">
+            <mat-label>Références</mat-label>
+            <textarea matInput placeholder="Références pour suivi" formControlName="references" required></textarea>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill" class="small-form-field">
+            <mat-label>Prochain Rendez-vous</mat-label>
+            <input matInput [matDatepicker]="picker2" formControlName="prochainRendezVous" required>
+            <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+            <mat-datepicker #picker2></mat-datepicker>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill" class="small-form-field">
+            <mat-label>Remarques sur le Suivi</mat-label>
+            <textarea matInput placeholder="Remarques supplémentaires" formControlName="remarquesSuivi" required></textarea>
+          </mat-form-field>
+
+          <div class="button-group">
+            <button mat-button matStepperPrevious>Retour</button>
+            <button mat-button (click)="onSubmit()">Soumettre</button>
+          </div>
+        </form>
+      </mat-step>
+    </mat-horizontal-stepper>
+  </ng-container>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button mat-button (click)="onCloseClick()">Fermer</button>
+</mat-dialog-actions>

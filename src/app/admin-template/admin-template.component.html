@@ -16,7 +16,6 @@
   <span class="spacer"></span>
   <button mat-button [matMenuTriggerFor]="userMenu" class="user-menu-button">
       <label>{{userName}}</label>
-
       <mat-icon class="menu-icon">arrow_drop_down</mat-icon>
 
   </button>
@@ -46,7 +45,7 @@
 <mat-drawer-container class="drawer-container">
   <mat-drawer #drawer class="drawer" mode="side" opened="true">
     <mat-nav-list>
-      <a mat-list-item routerLink="/dashboard/employees">
+      <a mat-list-item routerLink="/dashboard/patients">
         <mat-icon>person</mat-icon>
         <span>Patient</span>
       </a>

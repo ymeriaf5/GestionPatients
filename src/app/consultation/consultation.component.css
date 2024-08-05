@@ -1,0 +1,44 @@
+.dialog-title {
+  font-weight: bold;
+  color: #3f51b5; /* Primary color for the title */
+  margin-bottom: 16px; /* Space below the title */
+}
+
+.action-container {
+  margin-bottom: 16px;
+}
+
+.button-group {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 16px;
+}
+
+mat-form-field {
+  width: 100%;
+  margin-bottom: 16px; /* Space between form fields */
+}
+
+.small-form-field {
+  max-width: 400px; /* Adjust as needed */
+}
+
+textarea {
+  min-height: 80px; /* Slightly larger for better readability */
+  resize: vertical; /* Allows resizing only vertically */
+}
+
+.mat-horizontal-stepper-header {
+  font-weight: bold;
+  background-color: #f5f5f5; /* Light background for step headers */
+}
+
+.mat-step-header {
+  background-color: #e3f2fd; /* Light blue background for step headers */
+  padding: 10px;
+  border-radius: 4px; /* Rounded corners */
+}
+
+.mat-step-header .mat-step-icon {
+  color: #3f51b5; /* Primary color for step icons */
+}

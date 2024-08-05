@@ -4,6 +4,8 @@ import { Observable, tap } from 'rxjs';
 import { Employee } from './model/employee';
 import {Patient} from "./model/patient";
 import {Patient_show} from "./model/patient_show";
+import {Consultation} from "./model/Consultation";
+import {Consultation_show} from "./model/Consultation_show";
 
 @Injectable({
   providedIn: 'root'
@@ -85,6 +87,14 @@ export class DemoListeService {
 
   getPatientById(id: number): Observable<Patient> {
     return this.http.get<Patient>(`${this.apiUrl}/patients/${id}`, { headers: this.getHeaders() });
+  }
+  // Consultation methods
+  addConsultation(consultation: Consultation): Observable<HttpResponse<void>> {
+    return this.http.post<void>(`${this.apiUrl}/consultations`, consultation, { headers: this.getHeaders(), observe: 'response' });
+  }
+
+  getConsultationtById(id: number): Observable<Consultation_show[]> {
+    return this.http.get<Consultation_show[]>(`${this.apiUrl}/consultations/${id}`, { headers: this.getHeaders() });
   }
 
   authenticate(email: string, password: string): Observable<any> {
