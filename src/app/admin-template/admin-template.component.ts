@@ -23,7 +23,8 @@ export class AdminTemplateComponent implements OnInit {
   private async loadUserName() {
     const token = localStorage.getItem('token');
     if (token) {
-      this.userName = this.demoListeService.username;
+      // @ts-ignore
+      this.userName = localStorage.getItem('username');
     } else {
       this.router.navigate(['/login']);
     }

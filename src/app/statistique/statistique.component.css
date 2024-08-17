@@ -1,0 +1,8 @@
+mat-toolbar {
+  background-color: whitesmoke; /* Primary color */
+  color: black;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  margin-bottom: 40px;
+}

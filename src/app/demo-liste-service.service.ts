@@ -17,10 +17,6 @@ export class DemoListeService {
 
   constructor(private http: HttpClient) {}
 
-  setToken(token: string) {
-    this.token = token;
-  }
-
   private getHeaders(): HttpHeaders {
     let headers = new HttpHeaders({
       'Content-Type': 'application/json'
@@ -97,19 +93,39 @@ export class DemoListeService {
     return this.http.get<Consultation_show[]>(`${this.apiUrl}/consultations/${id}`, { headers: this.getHeaders() });
   }
 
+  getDoctors():Observable<Employee[]>{
+    return this.http.get<Employee[]>(`${this.apiUrl}/doctors`, { headers: this.getHeaders() });
+  }
+  getConsultationsByProvenance(provenanceId: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/registre/${provenanceId}`, { headers: this.getHeaders() });
+  }
+  getProvenanceName(id: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/provenanceName/${id}`, { headers: this.getHeaders() });
+  }
+  getStat(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/stat`, { headers: this.getHeaders() });
+  }
+
+
   authenticate(email: string, password: string): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/authenticate`, { email, password })
       .pipe(tap(response => {
-        localStorage.setItem('otp-email', email);
-        this.username = response.name; // Ensure this is correctly set
-      }));
+        if (response.provenance_id) {
+          localStorage.setItem('otp-email', email);
+          localStorage.setItem('username', response.name);
+          localStorage.setItem('provenance_id', response.provenance_id);
+          console.log('Provenance ID stored in localStorage:', localStorage.getItem('provenance_id'));
+        } else {
+          console.error('Provenance ID is undefined in the response.');
+        } })
+      );
   }
 
   verifyOtp(email: string, otp: string): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/verify-otp`, { email, otp })
       .pipe(tap(response => {
         localStorage.setItem('token', response.token);
-        this.username = response.name; // Ensure this is correctly set
+        localStorage.setItem('username', response.name);
       }));
   }
 }

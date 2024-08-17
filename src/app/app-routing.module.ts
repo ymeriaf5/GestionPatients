@@ -9,6 +9,10 @@ import {LoginComponent} from "./login/login.component";
 import {ListePatientComponent} from "./liste-patient/liste-patient.component";
 import {AddPatientComponent} from "./add-patient/add-patient.component";
 import {UpdatePatientComponent} from "./update-patient/update-patient.component";
+import {RegistreComponent} from "./registre/registre.component";
+
+import {IndicateurComponent} from "./indicateur/indicateur.component";
+import {StatistiqueComponent} from "./statistique/statistique.component";
 
 const routes: Routes = [
 
@@ -20,9 +24,12 @@ const routes: Routes = [
       { path: 'stepper', component: StepperComponent},
       { path:'employees/add',component: AddEmployeeComponent},
       { path: 'employees/update/:id', component: EmployeeFormComponentComponent},
-      {path: 'patients', component: ListePatientComponent},
+      { path: 'patients', component: ListePatientComponent},
       { path: 'patients/add', component: AddPatientComponent },
       { path: 'patients/update/:id', component: UpdatePatientComponent },
+      { path: 'registre',component:RegistreComponent},
+      { path: 'statistique',component:StatistiqueComponent},
+      { path: 'indicateur',component:IndicateurComponent}
     ]
   }
 ];

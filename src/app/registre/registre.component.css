@@ -1,0 +1,52 @@
+.consultation-container {
+  background-color: #f4f4f4;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  font-family: 'Georgia', serif;
+  max-width: 2000px;
+  margin: 0 auto;
+}
+
+h3 {
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 24px;
+  text-align: center;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.consultation-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.consultation-table th,
+.consultation-table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.consultation-table th {
+  background-color: #333;
+  color: #fff;
+  font-weight: bold;
+}
+
+.consultation-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.consultation-table tr:hover {
+  background-color: #f1f1f1;
+}
+
+.no-data-message {
+  text-align: center;
+  color: #888;
+  font-style: italic;
+  font-family: 'Georgia', serif;
+  margin-top: 20px;
+}

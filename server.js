@@ -63,7 +63,12 @@ const authenticateUser = async (req, res) => {
 
       res.statusCode = 200;
       res.setHeader('Content-Type', 'application/json');
-      res.end(JSON.stringify({ email, otpSent: true }));
+      res.end(JSON.stringify({
+        email,
+        otpSent: true,
+        provenance_id: user.provenance_id
+
+      }));
     } catch (error) {
       res.statusCode = 500;
       res.setHeader('Content-Type', 'application/json');
@@ -100,7 +105,7 @@ const verifyOtp = async (req, res) => {
       }
 
       const user = rows[0];
-      const token = jwt.sign({ id: user.id, email: user.email, name: user.name }, SECRET_KEY, { expiresIn: '1h' });
+      const token = jwt.sign({ id: user.id, email: user.email, name: user.name }, SECRET_KEY, { expiresIn: '5h' });
 
       res.statusCode = 200;
       res.setHeader('Content-Type', 'application/json');
@@ -235,7 +240,7 @@ const getEmployeeById = async (req, res, id) => {
   }
 };
 
-const addDefaultUser = async (name, email, password) => {
+const addDefaultUser = async (name, email, password,role,provenance_id) => {
   try {
     const query = 'SELECT * FROM employee WHERE email = ?';
     const values = [email];
@@ -244,8 +249,8 @@ const addDefaultUser = async (name, email, password) => {
     if (rows.length === 0) {
       // No default user found, add one
       const hashedPassword = await bcrypt.hash(password, 10);
-      const insertQuery = 'INSERT INTO employee (name, email, password) VALUES (?, ?, ?)';
-      const insertValues = [name, email, hashedPassword];
+      const insertQuery = 'INSERT INTO employee (name, email, password,role,provenance_id) VALUES (?, ?, ?,?,?)';
+      const insertValues = [name, email, hashedPassword,role,provenance_id];
       await pool.query(insertQuery, insertValues);
       console.log('Default user added');
     } else {
@@ -280,7 +285,6 @@ const getPatients = async (req, res) => {
           JOIN GestionPatient.antecedent a ON p.antecedent_id = a.id
       ORDER BY
         p.id;
-
     `;
     const [rows] = await pool.query(query);
     res.statusCode = 200;
@@ -452,58 +456,86 @@ const addConsultation = async (req, res) => {
   req.on('data', chunk => {
     body += chunk.toString();
   });
-  console.log("hi");
 
   req.on('end', async () => {
     try {
       const {
         dateConsultation,
         prestataire,
-        motifConsultation,
-        signesFonctionnels,
-        signesPhysiques,
-        diagnostics,
-        examensParacliniques,
-        resultatsExamens,
-        traitementsPrescrits,
-        posologie,
-        recommandations,
-        referenceInfo,
-        prochainRendezVous,
-        remarquesSuivi,
-        patientId // Assume patientId is used to associate with the Patient table
+        tabagisme,
+        diabete,
+        poids,
+        tailleM,
+        tailleC,
+        tourTaille,
+        freqC,
+        pas,
+        pad,
+        souffle,
+        complication,
+        glycemieJ,
+        hemoglobine,
+        cholesterolTotalMol,
+        cholesterolTotalG,
+        hdlMol,
+        hdlG,
+        ldlMol,
+        ldlG,
+        triglyceridesMol,
+        triglyceridesG,
+        creatineM,
+        creatinel,
+        ureeL,
+        ureeLG,
+        filtrationGlo,
+        bonduletteUri,
+        albuminurie,
+        proteinurie,
+        asat,
+        alat,
+        tsh,
+        kaliemie,
+        vitamineD,
+        acideUrique,
+        ecgResults,
+        foResults,
+        mesuresHyg,
+        antiDiabetique,
+        traitementPre,
+        antiHTA,
+        specialite,
+        dateRendezVous,
+        patientId
       } = JSON.parse(body);
 
       // Convert date values to the correct format for MySQL
       const formattedDateConsultation = new Date(dateConsultation).toISOString().slice(0, 19).replace('T', ' ');
-      const formattedProchainRendezVous = new Date(prochainRendezVous).toISOString().slice(0, 19).replace('T', ' ');
+      const formattedDateRendezVous = new Date(dateRendezVous).toISOString().slice(0, 19).replace('T', ' ');
 
       // Insert consultation into the database
       const query = `
-        INSERT INTO consultation (
-          date_Consultation,
-          prestataire,
-          motif_Consultation,
-          signes_Fonctionnels,
-          signes_Physiques,
-          diagnostics,
-          examens_Paracliniques,
-          resultats_Examens,
-          traitements_Prescrits,
-          posologie,
-          recommandations,
-          reference_Info,
-          prochain_Rendez_Vous,
-          remarques_Suivi,
-          patient_id
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      INSERT INTO consultation (
+      date_consultation, prestataire_id, tabagisme, diabete, poids, taillem,
+      taillec, tour_taille, freq_cardiaque, pas, pad, souffle, complication,
+      glycemie_j, hemoglobine, cholesterol_total_mol, cholesterol_total_g,
+      hdl_mol, hdl_g, ldl_mol, ldl_g, triglycerides_mol, triglycerides_g,
+      creatine_m, creatine_l, uree_l, uree_lg, filtration_globulaire,
+      bondulette_urinaire, albuminurie, proteinurie, asat, alat, tsh, kaliemie,
+      vitamine_d, acide_urique, ecg_results, fo_results, mesures_hyg,
+      anti_diabetique, traitement_prescrit, anti_hta, specialite,date_Rendez_Vous, patient_id
+      ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
       `;
+
       const values = [
-        formattedDateConsultation, prestataire, motifConsultation, signesFonctionnels,
-        signesPhysiques, diagnostics, examensParacliniques, resultatsExamens,
-        traitementsPrescrits, posologie, recommandations, referenceInfo,
-        formattedProchainRendezVous, remarquesSuivi, patientId
+        formattedDateConsultation, prestataire, tabagisme, diabete,
+        poids, tailleM, tailleC, tourTaille, freqC, pas, pad, souffle, complication,
+        glycemieJ, hemoglobine, cholesterolTotalMol, cholesterolTotalG, hdlMol, hdlG,
+        ldlMol, ldlG, triglyceridesMol, triglyceridesG, creatineM, creatinel, ureeL,
+        ureeLG, filtrationGlo, bonduletteUri, albuminurie, proteinurie, asat, alat,
+        tsh, kaliemie, vitamineD, acideUrique, ecgResults, foResults, mesuresHyg,
+        antiDiabetique, traitementPre, antiHTA, specialite ,formattedDateRendezVous, patientId
       ];
+
       await pool.query(query, values);
 
       res.statusCode = 201;
@@ -517,6 +549,9 @@ const addConsultation = async (req, res) => {
     }
   });
 };
+
+
+
 const getConsultationsById = async (req, res, id) => {
   try {
     const query = 'SELECT * FROM consultation where patient_id= ?';
@@ -531,7 +566,87 @@ const getConsultationsById = async (req, res, id) => {
     res.end(JSON.stringify({ error: 'Error fetching Consultation', details: error.message }));
   }
 };
+const getDocteurs =async (req,res)=>{
+  try {
+    const query='SELECT * FROM employee where role=?;'
+    const values="docteur";
+    const  [rows]= await pool.query(query, values);
+    res.statusCode = 200;
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify(rows));
+    } catch (error) {
+    res.statusCode = 500;
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify({ error: 'Error fetching Docteurs', details: error.message }));
+  }
+}
+const getConsultationByProvenance = async (req, res, provenanceId) => {
+  try {
+    const query = `
+      SELECT c.date_consultation, p.nom, p.prenom, p.cin, p.sexe, p.telephone
+      FROM consultation c
+      JOIN patient p ON c.patient_id = p.id
+      JOIN provenance prov ON p.provenance_id = prov.id
+      WHERE prov.id = ?;
+    `;
+    const values = [provenanceId];
+    const [rows] = await pool.query(query, values);
 
+    res.statusCode = 200;
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify(rows));
+  } catch (error) {
+    res.statusCode = 500;
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify({ error: 'Error fetching consultations', details: error.message }));
+  }
+};
+const getProvenanceNameById = async (req, res, id) => {
+  try {
+    const query = 'SELECT nom FROM provenance WHERE id = ?;';
+    const values = [id];
+    const [rows] = await pool.query(query, values);
+    if (rows.length === 0) {
+      res.statusCode = 404;
+      res.setHeader('Content-Type', 'application/json');
+      res.end(JSON.stringify({ error: 'Provenance not found' }));
+      return;
+    }
+    res.statusCode = 200;
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify(rows[0]));
+  } catch (error) {
+    res.statusCode = 500;
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify({ error: 'Error fetching provenance', details: error.message }));
+  }
+};
+const getStat = async (req, res) => {
+  try {
+    const query = `
+      SELECT prov.nom, COUNT(*) AS count
+      FROM patient p
+      JOIN provenance prov ON p.provenance_id = prov.id
+      GROUP BY p.provenance_id;
+    `;
+
+    const [rows] = await pool.query(query);
+
+    if (rows.length === 0) {
+      res.statusCode = 404;
+      res.setHeader('Content-Type', 'application/json');
+      res.end(JSON.stringify({ error: 'No provenance data found' }));
+      return;
+    }
+    res.statusCode = 200;
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify(rows));
+  } catch (error) {
+    res.statusCode = 500;
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify({ error: 'Error fetching provenance', details: error.message }));
+  }
+}
 
 const server = http.createServer((req, res) => {
   const reqUrl = url.parse(req.url, true);
@@ -594,6 +709,16 @@ const server = http.createServer((req, res) => {
   }else if (pathname.startsWith('/api/consultations/') && method === 'GET') {
     const id = pathname.split('/')[3];
     verifyToken(req, res, () => getConsultationsById(req, res, id));
+  }else if (pathname === '/api/doctors' && method === 'GET') {
+    verifyToken(req, res, () => getDocteurs(req, res));
+  } else if (pathname.startsWith('/api/registre/') && method === 'GET') {
+    const provenanceId = pathname.split('/')[3];
+    verifyToken(req, res, () => getConsultationByProvenance(req, res, provenanceId));
+  }else if (pathname.startsWith('/api/provenanceName/') && method === 'GET') {
+    const provenanceId = pathname.split('/')[3];
+    verifyToken(req, res, () => getProvenanceNameById(req, res, provenanceId));
+  }else if (pathname === '/api/stat' && method === 'GET') {
+    verifyToken(req, res, () => getStat(req, res));
   } else {
     res.statusCode = 404;
     res.setHeader('Content-Type', 'text/plain');
@@ -603,6 +728,6 @@ const server = http.createServer((req, res) => {
 
 server.listen(port, hostname, async () => {
   console.log(`Server running at http://${hostname}:${port}/`);
-  //await addDefaultUser('Youness Meriaf', 'youness.meriaf@uit.ac.ma', 'admin');
-  //await addDefaultPatient(1, 1, '2000-01-01', 1, '123 Main St', 'Doe', 'John', 'CD6100', 'M', '555-1234');
+  await addDefaultUser('Youness Meriaf', 'youness.meriaf@uit.ac.ma', 'admin','docteur',4);
+  await addDefaultPatient(1, 1, '2000-01-01', 1, '123 Main St', 'Doe', 'John', 'CD6100', 'M', '555-1234');
 });

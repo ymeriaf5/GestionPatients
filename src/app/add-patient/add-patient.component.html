@@ -1,67 +1,73 @@
 <div class="container">
   <mat-card class="card-container">
     <form #myForm="ngForm" (ngSubmit)="onSubmit(myForm)" class="form-container">
-      <div class="form-field">
-        <mat-form-field appearance="fill">
-          <mat-label>Nom</mat-label>
-          <input matInput type="text" id="nom" name="nom" ngModel required>
-        </mat-form-field>
+      <div class="form-field-row">
+        <div class="form-field">
+          <mat-form-field appearance="fill">
+            <mat-label>Nom</mat-label>
+            <input matInput type="text" id="nom" name="nom" ngModel required>
+          </mat-form-field>
+        </div>
+        <div class="form-field">
+          <mat-form-field appearance="fill">
+            <mat-label>Prénom</mat-label>
+            <input matInput type="text" id="prenom" name="prenom" ngModel required>
+          </mat-form-field>
+        </div>
       </div>
-      <div class="form-field">
-        <mat-form-field appearance="fill">
-          <mat-label>Prénom</mat-label>
-          <input matInput type="text" id="prenom" name="prenom" ngModel required>
-        </mat-form-field>
+      <div class="form-field-row">
+        <div class="form-field">
+          <mat-form-field appearance="fill">
+            <mat-label>Adresse</mat-label>
+            <input matInput type="text" id="adresse" name="adresse" ngModel required>
+          </mat-form-field>
+        </div>
+        <div class="form-field">
+          <mat-form-field appearance="fill">
+            <mat-label>CIN</mat-label>
+            <input matInput type="text" id="cin" name="cin" ngModel required>
+          </mat-form-field>
+        </div>
       </div>
-      <div class="form-field">
-        <mat-form-field appearance="fill">
-          <mat-label>Adresse</mat-label>
-          <input matInput type="text" id="adresse" name="adresse" ngModel required>
-        </mat-form-field>
+      <div class="form-field-row">
+        <div class="form-field">
+          <mat-form-field appearance="fill">
+            <mat-label>Sexe</mat-label>
+            <mat-select id="sexe" name="sexe" ngModel required>
+              <mat-option value="Homme">Homme</mat-option>
+              <mat-option value="Femme">Femme</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="form-field">
+          <mat-form-field appearance="fill">
+            <mat-label>Téléphone</mat-label>
+            <input matInput type="text" id="telephone" name="telephone" ngModel required>
+          </mat-form-field>
+        </div>
       </div>
-      <div class="form-field">
-        <mat-form-field appearance="fill">
-          <mat-label>CIN</mat-label>
-          <input matInput type="text" id="cin" name="cin" ngModel required>
-        </mat-form-field>
+      <div class="form-field-row">
+        <div class="form-field">
+          <mat-form-field appearance="fill">
+            <mat-label>Antécédent</mat-label>
+            <mat-select id="antecedent_id" name="antecedent_id" ngModel required>
+              <mat-option *ngFor="let antecedent of antecedents" [value]="antecedent.id">
+                {{ antecedent.nom }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="form-field">
+          <mat-form-field appearance="fill">
+            <mat-label>Couverture</mat-label>
+            <mat-select id="couverture_id" name="couverture_id" ngModel required>
+              <mat-option *ngFor="let couverture of couvertures" [value]="couverture.id">
+                {{ couverture.type }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
       </div>
-      <div class="form-field">
-        <mat-form-field appearance="fill">
-          <mat-label>Sexe</mat-label>
-          <input matInput type="text" id="sexe" name="sexe" ngModel required>
-        </mat-form-field>
-      </div>
-      <div class="form-field">
-        <mat-form-field appearance="fill">
-          <mat-label>Téléphone</mat-label>
-          <input matInput type="text" id="telephone" name="telephone" ngModel required>
-        </mat-form-field>
-      </div>
-      <!-- antecedent -->
-      <div class="form-field">
-        <mat-form-field appearance="fill">
-          <mat-label>Antécédent</mat-label>
-          <mat-select id="antecedent_id" name="antecedent_id" ngModel required>
-            <mat-option *ngFor="let antecedent of antecedents" [value]="antecedent.id">
-              {{ antecedent.nom }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
-
-      <!-- couverture -->
-      <div class="form-field">
-        <mat-form-field appearance="fill">
-          <mat-label>Couverture</mat-label>
-          <mat-select id="couverture_id" name="couverture_id" ngModel required>
-            <mat-option *ngFor="let couverture of couvertures" [value]="couverture.id">
-              {{ couverture.type }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
-
-      <!-- provenance -->
       <div class="form-field">
         <mat-form-field appearance="fill">
           <mat-label>Provenance</mat-label>
@@ -72,7 +78,9 @@
           </mat-select>
         </mat-form-field>
       </div>
-      <button mat-raised-button color="primary">Enregistrer</button>
+      <div class="form-actions">
+        <button mat-raised-button color="primary">Enregistrer</button>
+      </div>
     </form>
   </mat-card>
 </div>

@@ -1,0 +1,28 @@
+<div *ngIf="consultations.length > 0; else noData" class="consultation-container">
+  <h3>Consultations for Provenance: {{provenance}}</h3>
+  <table class="consultation-table">
+    <thead>
+    <tr>
+      <th>Date</th>
+      <th>Nom</th>
+      <th>Prénom</th>
+      <th>CIN</th>
+      <th>Sexe</th>
+      <th>Téléphone</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let consultation of consultations">
+      <td>{{ consultation.date_consultation | date:'short':'':''}}</td>
+      <td>{{ consultation.nom }}</td>
+      <td>{{ consultation.prenom }}</td>
+      <td>{{ consultation.cin }}</td>
+      <td>{{ consultation.sexe }}</td>
+      <td>{{ consultation.telephone }}</td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+<ng-template #noData>
+  <p class="no-data-message">No consultations found for this provenance.</p>
+</ng-template>

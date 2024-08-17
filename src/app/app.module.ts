@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import {NgModule} from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -35,7 +35,13 @@ import { UpdatePatientComponent } from './update-patient/update-patient.componen
 import { MatDialogModule } from "@angular/material/dialog";
 import { ConsultationComponent } from './consultation/consultation.component';
 import { MatDatepickerModule } from "@angular/material/datepicker";
-import { MatNativeDateModule } from "@angular/material/core"; // Required for date picker
+import { MatNativeDateModule } from "@angular/material/core";
+import {MatTab, MatTabGroup} from "@angular/material/tabs";
+import { RegistreComponent } from './registre/registre.component';
+import { IndicateurComponent } from './indicateur/indicateur.component';
+import { StatistiqueComponent } from './statistique/statistique.component';
+import {ChartModule} from "angular-highcharts";
+
 
 @NgModule({
   declarations: [
@@ -49,7 +55,10 @@ import { MatNativeDateModule } from "@angular/material/core"; // Required for da
     ListePatientComponent,
     AddPatientComponent,
     UpdatePatientComponent,
-    ConsultationComponent
+    ConsultationComponent,
+    RegistreComponent,
+    IndicateurComponent,
+    StatistiqueComponent
   ],
   imports: [
     BrowserModule,
@@ -75,12 +84,16 @@ import { MatNativeDateModule } from "@angular/material/core"; // Required for da
     MatSelectModule,
     MatDialogModule,
     MatDatepickerModule,
-    MatNativeDateModule // Required for date picker to work properly
+    MatNativeDateModule,
+    MatTab,
+    MatTabGroup,
+    ChartModule
+    // Required for date picker to work properly
   ],
   providers: [
     provideAnimationsAsync(),
     DemoService,
-    DemoListeService
+    DemoListeService,
   ],
   bootstrap: [AppComponent],
   exports: [RouterModule]
