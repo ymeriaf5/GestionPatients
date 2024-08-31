@@ -1,0 +1,38 @@
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 80vh;
+}
+
+.card-container {
+  width: 100%;
+  max-width: 600px; /* Slightly wider for more spacious form fields */
+  padding: 40px; /* More padding for a clean look */
+  background-color: #ffffff; /* White background for the form */
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Soft shadow for a professional look */
+  border-radius: 8px; /* Rounded corners for modern design */
+}
+
+.form-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-field {
+  margin-bottom: 20px; /* More space between form fields */
+}
+
+.full-width {
+  width: 100%;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px; /* Space above the submit button */
+}
+
+mat-form-field {
+  width: 100%;
+}

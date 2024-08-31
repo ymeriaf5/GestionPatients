@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { DemoListeService } from "../demo-liste-service.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-add-patient',
@@ -12,7 +13,11 @@ export class AddPatientComponent implements OnInit {
   couvertures: any[] = [];
   provenances: any[] = [];
 
-  constructor(private patientService: DemoListeService) { }
+  constructor(
+    private patientService: DemoListeService,
+    private router: Router,
+
+  ) { }
 
   ngOnInit(): void {
     this.loadAntecedents();
@@ -45,7 +50,7 @@ export class AddPatientComponent implements OnInit {
     this.patientService.addPatient(form.value).subscribe(
       response => {
         console.log('Patient added successfully', response);
-        form.reset();
+        this.router.navigate(['/dashboard/patients']);
       },
       error => console.error('Error adding patient', error)
     );

@@ -13,6 +13,8 @@
 mat-nav-list a {
   display: flex;
   align-items: center;
+  text-decoration: none; /* Remove underline */
+  color: white; /* Ensure text color is white */
 }
 
 mat-icon {
@@ -21,11 +23,13 @@ mat-icon {
 
 .page-content {
   min-height: 600px; /* Adjust minimum height as needed */
+  margin-top: 20px;
 }
 
 .spacer {
   flex: 1 1 auto;
 }
+
 .button-container {
   display: flex;
   justify-content: flex-end;
@@ -35,16 +39,12 @@ mat-icon {
 .add-employee-button {
   margin-bottom: 16px; /* Adjust the value as needed */
 }
+
 body {
   margin: 0;
   font-family: Roboto, sans-serif;
 }
-.page-content {
-  margin-top: 20px;
-}
-.spacer {
-  flex: 1 1 auto;
-}
+
 mat-toolbar {
   position: fixed;
   z-index: 2;
@@ -53,22 +53,44 @@ mat-toolbar {
   background-color: #000 !important;
   color: white;
 }
+
 mat-drawer-container {
   margin-top: 64px; /* height of the toolbar */
 }
+
 a.mat-list-item {
   color: white;
 }
+
 a.mat-list-item:hover {
   background-color: #555;
 }
+
 button[mat-raised-button] {
   padding: 10px 20px;
   border-radius: 20px;
   width: 100px;
   color: white;
-  accent-color: white;
+  background-color: #555;
 }
+
+button[mat-button] {
+  text-transform: none;
+  color: white;
+}
+
+button[mat-button]:hover {
+  background-color: #555;
+}
+
+button[mat-raised-button]:hover {
+  background-color: #777;
+}
+
+a {
+  text-decoration: none;
+}
+
 .custom-toolbar {
   background: linear-gradient(90deg, black, #333);
   color: white;
@@ -88,30 +110,17 @@ button[mat-raised-button] {
   min-height: 64px;
 }
 
-.spacer {
-  flex: 1 1 auto;
+.user-menu-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-button[mat-button] {
-  text-transform: none;
+.user-info {
+  display: flex;
+  align-items: center;
 }
 
-button[mat-button]:hover {
-  background-color: #555;
+.menu-icon {
+  margin-left: 8px; /* Space between label and icon */
 }
-
-button[mat-raised-button] {
-  padding: 10px 20px;
-  border-radius: 20px;
-  color: white;
-  background-color: #555;
-}
-button[mat-button] {
-  color: white;
-}
-
-button[mat-raised-button]:hover {
-  background-color: #777;
-}
-
-

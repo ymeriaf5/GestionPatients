@@ -5,6 +5,7 @@ const bcrypt = require('bcryptjs');
 const pool = require('./db');
 const nodemailer = require('nodemailer');
 const speakeasy = require('speakeasy');
+const {log} = require("@angular-devkit/build-angular/src/builders/ssr-dev-server");
 
 const hostname = '127.0.0.1';
 const port = 3000;
@@ -66,8 +67,8 @@ const authenticateUser = async (req, res) => {
       res.end(JSON.stringify({
         email,
         otpSent: true,
-        provenance_id: user.provenance_id
-
+        provenance_id: user.provenance_id,
+        id:user.id
       }));
     } catch (error) {
       res.statusCode = 500;
@@ -647,7 +648,36 @@ const getStat = async (req, res) => {
     res.end(JSON.stringify({ error: 'Error fetching provenance', details: error.message }));
   }
 }
+const sendHelp = (req, res) => {
+  let body = '';
 
+  req.on('data', chunk => {
+    body += chunk.toString();
+  });
+
+  req.on('end', () => {
+    const { email, message } = JSON.parse(body);
+
+    const mailOptions = {
+      from: email,
+      to: 'youness.meriaf@uit.ac.ma',
+      subject: 'Contact',
+      text: message
+    };
+    console.log(email);
+    transporter.sendMail(mailOptions)
+      .then(info => {
+        res.statusCode = 200;
+        res.setHeader('Content-Type', 'application/json');
+        res.end(JSON.stringify({ message: 'Help request sent successfully', info }));
+      })
+      .catch(error => {
+        res.statusCode = 500;
+        res.setHeader('Content-Type', 'application/json');
+        res.end(JSON.stringify({ message: 'Failed to send help request', error }));
+      });
+  });
+};
 const server = http.createServer((req, res) => {
   const reqUrl = url.parse(req.url, true);
   const method = req.method.toUpperCase();
@@ -719,6 +749,8 @@ const server = http.createServer((req, res) => {
     verifyToken(req, res, () => getProvenanceNameById(req, res, provenanceId));
   }else if (pathname === '/api/stat' && method === 'GET') {
     verifyToken(req, res, () => getStat(req, res));
+  }else if (pathname === '/api/send-help' && method === 'POST') {
+    verifyToken(req, res, () => sendHelp(req, res));
   } else {
     res.statusCode = 404;
     res.setHeader('Content-Type', 'text/plain');

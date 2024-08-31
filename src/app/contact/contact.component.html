@@ -1,0 +1,12 @@
+<form [formGroup]="emailForm" (ngSubmit)="sendEmail()">
+  <ng-container class="email-container">
+    <mat-form-field appearance="fill" class="email-input-field">
+      <mat-label>Message</mat-label>
+      <textarea matInput placeholder="Écrivez votre message ici..." rows="4" formControlName="message" required></textarea>
+    </mat-form-field>
+    <button mat-raised-button color="primary" type="submit" class="send-button">
+      Envoyer
+      <mat-icon class="send-icon">send</mat-icon>
+    </button>
+  </ng-container>
+</form>

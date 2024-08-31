@@ -3,13 +3,13 @@
     <form #myForm="ngForm" (ngSubmit)="onSubmit(myForm)" class="form-container">
       <div class="form-field-row">
         <div class="form-field">
-          <mat-form-field appearance="fill">
+          <mat-form-field appearance="outline">
             <mat-label>Nom</mat-label>
             <input matInput type="text" id="nom" name="nom" ngModel required>
           </mat-form-field>
         </div>
         <div class="form-field">
-          <mat-form-field appearance="fill">
+          <mat-form-field appearance="outline">
             <mat-label>Prénom</mat-label>
             <input matInput type="text" id="prenom" name="prenom" ngModel required>
           </mat-form-field>
@@ -17,13 +17,13 @@
       </div>
       <div class="form-field-row">
         <div class="form-field">
-          <mat-form-field appearance="fill">
+          <mat-form-field appearance="outline">
             <mat-label>Adresse</mat-label>
             <input matInput type="text" id="adresse" name="adresse" ngModel required>
           </mat-form-field>
         </div>
         <div class="form-field">
-          <mat-form-field appearance="fill">
+          <mat-form-field appearance="outline">
             <mat-label>CIN</mat-label>
             <input matInput type="text" id="cin" name="cin" ngModel required>
           </mat-form-field>
@@ -31,7 +31,7 @@
       </div>
       <div class="form-field-row">
         <div class="form-field">
-          <mat-form-field appearance="fill">
+          <mat-form-field appearance="outline">
             <mat-label>Sexe</mat-label>
             <mat-select id="sexe" name="sexe" ngModel required>
               <mat-option value="Homme">Homme</mat-option>
@@ -40,7 +40,7 @@
           </mat-form-field>
         </div>
         <div class="form-field">
-          <mat-form-field appearance="fill">
+          <mat-form-field appearance="outline">
             <mat-label>Téléphone</mat-label>
             <input matInput type="text" id="telephone" name="telephone" ngModel required>
           </mat-form-field>
@@ -48,7 +48,7 @@
       </div>
       <div class="form-field-row">
         <div class="form-field">
-          <mat-form-field appearance="fill">
+          <mat-form-field appearance="outline">
             <mat-label>Antécédent</mat-label>
             <mat-select id="antecedent_id" name="antecedent_id" ngModel required>
               <mat-option *ngFor="let antecedent of antecedents" [value]="antecedent.id">
@@ -58,7 +58,7 @@
           </mat-form-field>
         </div>
         <div class="form-field">
-          <mat-form-field appearance="fill">
+          <mat-form-field appearance="outline">
             <mat-label>Couverture</mat-label>
             <mat-select id="couverture_id" name="couverture_id" ngModel required>
               <mat-option *ngFor="let couverture of couvertures" [value]="couverture.id">
@@ -69,7 +69,7 @@
         </div>
       </div>
       <div class="form-field">
-        <mat-form-field appearance="fill">
+        <mat-form-field appearance="outline">
           <mat-label>Provenance</mat-label>
           <mat-select id="provenance_id" name="provenance_id" ngModel required>
             <mat-option *ngFor="let provenance of provenances" [value]="provenance.id">

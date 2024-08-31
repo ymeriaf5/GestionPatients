@@ -26,13 +26,18 @@ export class StatistiqueComponent  implements OnInit{
           type: 'column',
         },
         title: {
-          text: 'Statistiques par Provenance'
+          text: 'Statistiques des patients par Provenance'
         },
         credits: {
           enabled: false
         },
         xAxis: {
           categories: categories
+        },
+        yAxis: {
+          title: {
+            text: 'Patients'
+          }
         },
         series: [
           {

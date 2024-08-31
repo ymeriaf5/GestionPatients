@@ -105,18 +105,22 @@ export class DemoListeService {
   getStat(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/stat`, { headers: this.getHeaders() });
   }
+  sendHelp(email: string, message: string): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/send-help`, { email, message }, { headers: this.getHeaders() });
+  }
 
 
   authenticate(email: string, password: string): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/authenticate`, { email, password })
       .pipe(tap(response => {
-        if (response.provenance_id) {
+        if (response.id !== undefined) {
           localStorage.setItem('otp-email', email);
           localStorage.setItem('username', response.name);
           localStorage.setItem('provenance_id', response.provenance_id);
-          console.log('Provenance ID stored in localStorage:', localStorage.getItem('provenance_id'));
+          localStorage.setItem('id', response.id);
+          console.log(' ID stored in localStorage: ', localStorage.getItem('id'));
         } else {
-          console.error('Provenance ID is undefined in the response.');
+          console.error('ID is undefined in the response.');
         } })
       );
   }

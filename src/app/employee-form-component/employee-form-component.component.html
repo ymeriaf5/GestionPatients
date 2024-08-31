@@ -2,24 +2,41 @@
   <mat-card class="card-container">
     <form [formGroup]="employeeForm" (ngSubmit)="onSubmit()" class="form-container">
       <input type="hidden" formControlName="id">
+
       <div class="form-field">
-        <mat-form-field appearance="fill">
+        <mat-form-field appearance="fill" class="full-width">
           <mat-label>Nom</mat-label>
           <input matInput type="text" formControlName="name" required>
         </mat-form-field>
       </div>
+
       <div class="form-field">
-        <mat-form-field appearance="fill">
+        <mat-form-field appearance="fill" class="full-width">
           <mat-label>Email</mat-label>
           <input matInput type="email" formControlName="email" required>
         </mat-form-field>
       </div>
+
       <div class="form-field">
-        <mat-form-field appearance="fill">
+        <mat-form-field appearance="fill" class="full-width">
           <mat-label>Mot de Passe</mat-label>
-          <input matInput type="password" formControlName="password" required>
+          <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password" required>
+          <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword">
+            <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+          </button>
         </mat-form-field>
       </div>
+
+      <div class="form-field">
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>Retapez le Mot de Passe</mat-label>
+          <input matInput [type]="hideRetypePassword ? 'password' : 'text'" formControlName="retypePassword" required>
+          <button mat-icon-button matSuffix (click)="hideRetypePassword = !hideRetypePassword" [attr.aria-label]="'Hide retype password'" [attr.aria-pressed]="hideRetypePassword">
+            <mat-icon>{{ hideRetypePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+          </button>
+        </mat-form-field>
+      </div>
+
       <div class="form-actions">
         <button mat-raised-button type="submit" color="accent">Modifier</button>
       </div>

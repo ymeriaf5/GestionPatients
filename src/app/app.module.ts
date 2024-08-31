@@ -41,6 +41,7 @@ import { RegistreComponent } from './registre/registre.component';
 import { IndicateurComponent } from './indicateur/indicateur.component';
 import { StatistiqueComponent } from './statistique/statistique.component';
 import {ChartModule} from "angular-highcharts";
+import { ContactComponent } from './contact/contact.component';
 
 
 @NgModule({
@@ -58,7 +59,8 @@ import {ChartModule} from "angular-highcharts";
     ConsultationComponent,
     RegistreComponent,
     IndicateurComponent,
-    StatistiqueComponent
+    StatistiqueComponent,
+    ContactComponent
   ],
   imports: [
     BrowserModule,

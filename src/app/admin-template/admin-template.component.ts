@@ -10,6 +10,7 @@ import { DemoListeService } from '../demo-liste-service.service';
 export class AdminTemplateComponent implements OnInit {
   title = 'New title';
   userName?: string;
+  userId?:string;
 
   constructor(
     private demoListeService: DemoListeService,
@@ -20,11 +21,14 @@ export class AdminTemplateComponent implements OnInit {
     await this.loadUserName();
   }
 
+
   private async loadUserName() {
     const token = localStorage.getItem('token');
     if (token) {
       // @ts-ignore
       this.userName = localStorage.getItem('username');
+      // @ts-ignore
+      this.userId=localStorage.getItem('id');
     } else {
       this.router.navigate(['/login']);
     }

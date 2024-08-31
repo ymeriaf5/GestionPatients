@@ -15,32 +15,37 @@
   </button>
   <span class="spacer"></span>
   <button mat-button [matMenuTriggerFor]="userMenu" class="user-menu-button">
+    <div class="user-info">
       <label>{{userName}}</label>
       <mat-icon class="menu-icon">arrow_drop_down</mat-icon>
-
+    </div>
   </button>
 
   <mat-menu #userMenu="matMenu">
-    <button mat-menu-item>
-      <mat-icon>person</mat-icon>
-      <span>Profil</span>
-    </button>
-    <button mat-menu-item>
-      <mat-icon>contact_mail</mat-icon>
-      <span>Contact</span>
-    </button>
-    <button mat-menu-item>
-      <mat-icon>help_outline</mat-icon>
-      <span>Aide</span>
-    </button>
+    <a [routerLink]="['/dashboard/employees/update',userId]">
+      <button mat-menu-item>
+        <mat-icon>person</mat-icon>
+        <span>Profil</span>
+      </button>
+    </a>
+    <a [routerLink]="['/dashboard/contact']">
+      <button mat-menu-item>
+        <mat-icon>contact_mail</mat-icon>
+        <span>Contact</span>
+      </button>
+    </a>
+    <a href="https://www.sante.gov.ma/Pages/Accueil.aspx">
+      <button mat-menu-item>
+        <mat-icon>help_outline</mat-icon>
+        <span>Aide</span>
+      </button>
+    </a>
     <button mat-menu-item (click)="logout()">
       <mat-icon>exit_to_app</mat-icon>
       <span>Déconnexion</span>
     </button>
   </mat-menu>
-
 </mat-toolbar>
-
 
 <mat-drawer-container class="drawer-container">
   <mat-drawer #drawer class="drawer" mode="side" opened="true">
@@ -70,7 +75,5 @@
     </div>
   </mat-drawer-content>
 </mat-drawer-container>
-
-
 </body>
 </html>

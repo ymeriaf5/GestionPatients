@@ -13,6 +13,7 @@ import {RegistreComponent} from "./registre/registre.component";
 
 import {IndicateurComponent} from "./indicateur/indicateur.component";
 import {StatistiqueComponent} from "./statistique/statistique.component";
+import {ContactComponent} from "./contact/contact.component";
 
 const routes: Routes = [
 
@@ -29,7 +30,8 @@ const routes: Routes = [
       { path: 'patients/update/:id', component: UpdatePatientComponent },
       { path: 'registre',component:RegistreComponent},
       { path: 'statistique',component:StatistiqueComponent},
-      { path: 'indicateur',component:IndicateurComponent}
+      { path: 'indicateur',component:IndicateurComponent},
+      { path: 'contact',component:ContactComponent}
     ]
   }
 ];
