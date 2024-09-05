@@ -1,13 +1,13 @@
 export interface Patient_show {
-  id: number;
+  Id_Patient: number;
   antecedent_nom: string;
   couverture_type: string;
   provenance_nom: string;
   adresse: string;
-  nom: string;
-  prenom: string;
-  cin: string;
-  sexe: string;
-  telephone: string;
+  Nom: string;
+  Prenom: string;
+  CNIE: string;
+  Sexe: string;
+  Telephone: string;
   [key: string]: any;
 }

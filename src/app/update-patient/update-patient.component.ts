@@ -15,6 +15,8 @@ export class UpdatePatientComponent implements OnInit{
   antecedents: any[] = [];
   couvertures: any[] = [];
   provenances: any[] = [];
+  etablissemnts: any[] = [];
+  niveaus: any[] = [];
   patientId?: number;
   constructor(private patientService: DemoListeService,
               private route: ActivatedRoute,
@@ -22,16 +24,19 @@ export class UpdatePatientComponent implements OnInit{
               private fb: FormBuilder,
   ) {
     this.patientForm = this.fb.group({
-      id: [''],
-      nom: ['', Validators.required],
-      prenom: ['', Validators.required],
-      adresse: ['', Validators.required],
-      cin: ['', Validators.required],
-      sexe: ['', Validators.required],
-      telephone: ['', Validators.required],
-      antecedent_id: ['', Validators.required],
-      couverture_id: ['', Validators.required],
-      provenance_id: ['', Validators.required],
+      Id_Patient: [''],
+      Nom: ['', Validators.required],
+      Prenom: ['', Validators.required],
+      DateNaissance: ['', Validators.required],
+      CNIE: ['', Validators.required],
+      Sexe: ['', Validators.required],
+      Telephone: ['', Validators.required],
+      Id_Antecedent: [[], Validators.required],  // [] for multiple select
+      Id_Couverture: ['', Validators.required],
+      Adresse: ['', Validators.required],
+      Id_Provenance: ['', Validators.required],
+      Id_NiveauScolarite: ['', Validators.required],
+      Id_Etablissement: ['', Validators.required],
     });
 
   }
@@ -40,8 +45,11 @@ export class UpdatePatientComponent implements OnInit{
     this.loadAntecedents();
     this.loadCouvertures();
     this.loadProvenances();
+    this.loadEtablissement();
+    this.loadNiveau();
     this.route.paramMap.subscribe(params => {
       this.patientId = +params.get('id')!;
+      console.log(this.patientId)
       this.loadPatient(this.patientId);
     });
   }
@@ -70,6 +78,19 @@ export class UpdatePatientComponent implements OnInit{
     this.patientService.getPatientById(id).subscribe((patient: Patient) => {
       this.patientForm.patchValue(patient);
     });
+  }
+
+  loadEtablissement(): void {
+    this.patientService.getEtablissements().subscribe(
+      data => this.etablissemnts = data,
+      error => console.error('Error fetching etablissement', error)
+    );
+  }
+  loadNiveau(): void {
+    this.patientService.getNiveauScollaire().subscribe(
+      data => this.niveaus = data,
+      error => console.error('Error fetching niveau scollaire', error)
+    );
   }
 
 

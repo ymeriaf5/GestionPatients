@@ -25,6 +25,7 @@
     "chart.js": "^4.4.3",
     "highcharts": "^11.4.6",
     "jsonwebtoken": "^9.0.2",
+    "mssql": "^11.0.1",
     "mysql2": "^3.10.3",
     "ng-apexcharts": "^1.11.0",
     "ng2-charts": "^6.0.1",

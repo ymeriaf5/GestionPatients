@@ -1,19 +1,19 @@
 <div class="container">
   <mat-card class="card-container">
     <form [formGroup]="patientForm" (ngSubmit)="onSubmit()" class="form-container">
-      <input type="hidden" formControlName="id">
+      <input type="hidden" formControlName="Id_Patient">
 
       <div class="form-field-row">
         <div class="form-field">
           <mat-form-field appearance="outline">
             <mat-label>Nom</mat-label>
-            <input matInput type="text" formControlName="nom" required>
+            <input matInput type="text" id="Nom" formControlName="Nom" required>
           </mat-form-field>
         </div>
         <div class="form-field">
           <mat-form-field appearance="outline">
             <mat-label>Prénom</mat-label>
-            <input matInput type="text" formControlName="prenom" required>
+            <input matInput type="text" id="Prenom" formControlName="Prenom" required>
           </mat-form-field>
         </div>
       </div>
@@ -21,14 +21,16 @@
       <div class="form-field-row">
         <div class="form-field">
           <mat-form-field appearance="outline">
-            <mat-label>Adresse</mat-label>
-            <input matInput type="text" formControlName="adresse" required>
+            <mat-label>Date Naissance</mat-label>
+            <input matInput [matDatepicker]="picker" formControlName="DateNaissance" required>
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
           </mat-form-field>
         </div>
         <div class="form-field">
           <mat-form-field appearance="outline">
             <mat-label>CIN</mat-label>
-            <input matInput type="text" formControlName="cin" required>
+            <input matInput type="text" id="CNIE" formControlName="CNIE" required>
           </mat-form-field>
         </div>
       </div>
@@ -37,7 +39,7 @@
         <div class="form-field">
           <mat-form-field appearance="outline">
             <mat-label>Sexe</mat-label>
-            <mat-select id="sexe" name="sexe" ngModel required>
+            <mat-select id="Sexe" formControlName="Sexe" required>
               <mat-option value="Homme">Homme</mat-option>
               <mat-option value="Femme">Femme</mat-option>
             </mat-select>
@@ -46,7 +48,7 @@
         <div class="form-field">
           <mat-form-field appearance="outline">
             <mat-label>Téléphone</mat-label>
-            <input matInput type="text" formControlName="telephone" required>
+            <input matInput type="text" id="Telephone" formControlName="Telephone" required>
           </mat-form-field>
         </div>
       </div>
@@ -55,9 +57,9 @@
         <div class="form-field">
           <mat-form-field appearance="outline">
             <mat-label>Antécédent</mat-label>
-            <mat-select formControlName="antecedent_id" required>
-              <mat-option *ngFor="let antecedent of antecedents" [value]="antecedent.id">
-                {{ antecedent.nom }}
+            <mat-select id="Id_Antecedent" formControlName="Id_Antecedent" multiple required>
+              <mat-option *ngFor="let antecedent of antecedents" [value]="antecedent.Id_Antecedent">
+                {{ antecedent.Nom }}
               </mat-option>
             </mat-select>
           </mat-form-field>
@@ -65,9 +67,9 @@
         <div class="form-field">
           <mat-form-field appearance="outline">
             <mat-label>Couverture</mat-label>
-            <mat-select formControlName="couverture_id" required>
-              <mat-option *ngFor="let couverture of couvertures" [value]="couverture.id">
-                {{ couverture.type }}
+            <mat-select id="Id_Couverture" formControlName="Id_Couverture" required>
+              <mat-option *ngFor="let couverture of couvertures" [value]="couverture.Id_Couverture">
+                {{ couverture.Nom }}
               </mat-option>
             </mat-select>
           </mat-form-field>
@@ -76,14 +78,44 @@
 
       <div class="form-field">
         <mat-form-field appearance="outline">
+          <mat-label>Adresse</mat-label>
+          <textarea matInput id="adresse" formControlName="Adresse" required></textarea>
+        </mat-form-field>
+      </div>
+
+      <div class="form-field">
+        <mat-form-field appearance="outline">
           <mat-label>Provenance</mat-label>
-          <mat-select formControlName="provenance_id" required>
-            <mat-option *ngFor="let provenance of provenances" [value]="provenance.id">
-              {{ provenance.nom }}
+          <mat-select id="Id_Provenance" formControlName="Id_Provenance" required>
+            <mat-option *ngFor="let provenance of provenances" [value]="provenance.Id_Provenance">
+              {{ provenance.Nom }}
             </mat-option>
           </mat-select>
         </mat-form-field>
       </div>
+
+      <div class="form-field">
+        <mat-form-field appearance="outline">
+          <mat-label>Niveau Scolaire</mat-label>
+          <mat-select id="Id_NiveauScolarite" formControlName="Id_NiveauScolarite" required>
+            <mat-option *ngFor="let niveau of niveaus" [value]="niveau.Id_NiveauScolarite">
+              {{ niveau.Nom }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="form-field">
+        <mat-form-field appearance="outline">
+          <mat-label>Etablissement</mat-label>
+          <mat-select id="Id_Etablissement" formControlName="Id_Etablissement" required>
+            <mat-option *ngFor="let etablissemnt of etablissemnts" [value]="etablissemnt.Id_Etablissement">
+              {{ etablissemnt.Nom_Etablissement }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
 
       <div class="form-actions">
         <button mat-raised-button type="submit" color="accent">Modifier</button>

@@ -73,6 +73,42 @@ export class DemoListeService {
     return this.http.get<any[]>(`${this.apiUrl}/provenances`, { headers: this.getHeaders() });
   }
 
+  getNiveauScollaire(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/niveaux-scolaires`, { headers: this.getHeaders() });
+  }
+
+  getEtablissements(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/etablissements`, { headers: this.getHeaders() });
+  }
+
+  getPrestataire(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/prestataire`, { headers: this.getHeaders() });
+  }
+  getSoufle(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/soufle`, { headers: this.getHeaders() });
+  }
+  getComplication(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/complication`, { headers: this.getHeaders() });
+  }
+  getTrouble(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/trouble`, { headers: this.getHeaders() });
+  }
+  getBU(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/BU`, { headers: this.getHeaders() });
+  }
+  gettp(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/tp`, { headers: this.getHeaders() });
+  }
+  getantihta(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/antihta`, { headers: this.getHeaders() });
+  }
+  getandid(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/antid`, { headers: this.getHeaders() });
+  }
+  getmesure(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/mesure`, { headers: this.getHeaders() });
+  }
+
   updatePatient(patient: Patient): Observable<HttpResponse<void>> {
     return this.http.put<void>(`${this.apiUrl}/patients/${patient.id}`, patient, { headers: this.getHeaders(), observe: 'response' });
   }
@@ -116,14 +152,16 @@ export class DemoListeService {
         if (response.id !== undefined) {
           localStorage.setItem('otp-email', email);
           localStorage.setItem('username', response.name);
-          localStorage.setItem('provenance_id', response.provenance_id);
           localStorage.setItem('id', response.id);
+          localStorage.setItem('provenance_id', response.provenance_id);
           console.log(' ID stored in localStorage: ', localStorage.getItem('id'));
         } else {
           console.error('ID is undefined in the response.');
-        } })
-      );
+        }
+      }));
   }
+
+
 
   verifyOtp(email: string, otp: string): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/verify-otp`, { email, otp })

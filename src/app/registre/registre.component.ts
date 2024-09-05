@@ -35,7 +35,7 @@ export class RegistreComponent implements OnInit {
   }
   loadProvenance(provenanceId: number){
     this.demoListeService.getProvenanceName(provenanceId).subscribe(response => {
-      this.provenance = response.nom;
+      this.provenance = response.Prov;
     });
   }
 

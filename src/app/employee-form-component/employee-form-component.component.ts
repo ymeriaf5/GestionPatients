@@ -22,10 +22,10 @@ export class EmployeeFormComponentComponent implements OnInit {
     private employeeService: DemoListeService
   ) {
     this.employeeForm = this.fb.group({
-      id: [''],
-      name: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', Validators.required],
+      id_Personelle: [''],
+      Nom: ['', Validators.required],
+      Email: ['', [Validators.required, Validators.email]],
+      MotDePasse: ['', Validators.required],
       retypePassword: ['', Validators.required],
     }, { validators: this.passwordMatchValidator });
   }
@@ -43,7 +43,7 @@ export class EmployeeFormComponentComponent implements OnInit {
     this.employeeService.getEmployeeById(id).subscribe((employee: Employee) => {
       this.employeeForm.patchValue({
         ...employee,
-        password: '',  // Clear the password field for security reasons
+        MotDePasse: '',  // Clear the password field for security reasons
         retypePassword: ''  // Ensure the retype password field is also clear
       });
     });
@@ -51,14 +51,23 @@ export class EmployeeFormComponentComponent implements OnInit {
 
   onSubmit(): void {
     if (this.employeeForm.valid) {
-      this.employeeService.updateEmployee(this.employeeForm.value).subscribe(() => {
-        this.router.navigate(['/dashboard/patients']);
-      });
+      console.log('Form Data:', this.employeeForm.value); // Debugging line
+      this.employeeService.updateEmployee(this.employeeForm.value).subscribe(
+        () => {
+          this.router.navigate(['/dashboard/patients']);
+        },
+        (error) => {
+          console.error('Error updating employee:', error); // Handle error
+        }
+      );
+    } else {
+      console.warn('Form is invalid', this.employeeForm.errors); // Debugging line
     }
   }
 
+
   passwordMatchValidator: ValidatorFn = (control: AbstractControl): { [key: string]: boolean } | null => {
-    const password = control.get('password')?.value;
+    const password = control.get('MotDePasse')?.value;
     const retypePassword = control.get('retypePassword')?.value;
     return password === retypePassword ? null : { 'mismatch': true };
   };

@@ -18,7 +18,14 @@ export class StatistiqueComponent  implements OnInit{
 
   fetchData(): void {
     this.statisticService.getStat().subscribe(data => {
-      const categories = data.map(item => item.nom);
+      console.log('Received data:', data); // Log the data to check its structure
+
+      if (data.length === 0) {
+        console.error('No data received for chart');
+        return;
+      }
+
+      const categories = data.map(item => item.province_name);
       const seriesData = data.map(item => item.count);
 
       this.chart = new Chart({
@@ -47,8 +54,11 @@ export class StatistiqueComponent  implements OnInit{
           }
         ]
       });
+    }, error => {
+      console.error('Error fetching data:', error);
     });
   }
+
 }
 
 

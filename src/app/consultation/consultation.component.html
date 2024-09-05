@@ -10,55 +10,55 @@
       <!-- Date Consultation Column -->
       <ng-container matColumnDef="date_consultation">
         <th mat-header-cell *matHeaderCellDef>Date de Consultation</th>
-        <td mat-cell *matCellDef="let element">{{element.date_consultation | date:'short':'':''}}</td>
+        <td mat-cell *matCellDef="let element">{{element.DateConsultation | date:'short':'':''}}</td>
       </ng-container>
 
       <!-- Prestataire Column -->
       <ng-container matColumnDef="prestataire">
         <th mat-header-cell *matHeaderCellDef>Prestataire</th>
-        <td mat-cell *matCellDef="let element">{{element.prestataire_id}}</td>
+        <td mat-cell *matCellDef="let element">{{element.Prestataire}}</td>
       </ng-container>
 
       <!-- Motif Consultation Column -->
       <ng-container matColumnDef="tabagisme">
         <th mat-header-cell *matHeaderCellDef>Tabagisme</th>
-        <td mat-cell *matCellDef="let element">{{element.tabagisme}}</td>
+        <td mat-cell *matCellDef="let element">{{element.Tabagisme}}</td>
       </ng-container>
 
       <!-- Signes Fonctionnels Column -->
       <ng-container matColumnDef="diabete">
         <th mat-header-cell *matHeaderCellDef>Diabete</th>
-        <td mat-cell *matCellDef="let element">{{element.diabete}}</td>
+        <td mat-cell *matCellDef="let element">{{element.Diabete}}</td>
       </ng-container>
 
       <!-- Signes Physiques Column -->
       <ng-container matColumnDef="glycemie_j">
         <th mat-header-cell *matHeaderCellDef>Glycemie</th>
-        <td mat-cell *matCellDef="let element">{{element.glycemie_j}}</td>
+        <td mat-cell *matCellDef="let element">{{element.Glycemie}}</td>
       </ng-container>
 
       <!-- Diagnostics Column -->
       <ng-container matColumnDef="cholesterol_total_mol">
         <th mat-header-cell *matHeaderCellDef>Cholesterol total</th>
-        <td mat-cell *matCellDef="let element">{{element.cholesterol_total_mol}}</td>
+        <td mat-cell *matCellDef="let element">{{element.CholesterolTotal}}</td>
       </ng-container>
 
       <!-- Examens Paracliniques Column -->
-      <ng-container matColumnDef="dateRendezVous">
-        <th mat-header-cell *matHeaderCellDef>Date de Rendez-Vous</th>
-        <td mat-cell *matCellDef="let element">{{element.date_rendez_vous | date:'short':'':''}}</td>
+      <ng-container matColumnDef="Soufle">
+        <th mat-header-cell *matHeaderCellDef>Soufles</th>
+        <td mat-cell *matCellDef="let element">{{element.Soufles}}</td>
       </ng-container>
 
       <!-- Résultats Examens Column -->
       <ng-container matColumnDef="complication">
         <th mat-header-cell *matHeaderCellDef>Complication</th>
-        <td mat-cell *matCellDef="let element">{{element.complication}}</td>
+        <td mat-cell *matCellDef="let element">{{element.Complications}}</td>
       </ng-container>
 
       <!-- Traitements Prescrits Column -->
-      <ng-container matColumnDef="specialite">
-        <th mat-header-cell *matHeaderCellDef>Specialite</th>
-        <td mat-cell *matCellDef="let element">{{element.specialite}}</td>
+      <ng-container matColumnDef="Bandelettes">
+        <th mat-header-cell *matHeaderCellDef>Bandelettes</th>
+        <td mat-cell *matCellDef="let element">{{element.Bandelettes}}</td>
       </ng-container>
 
       <!-- Header and Row Definitions -->
@@ -69,364 +69,371 @@
   </ng-container>
 
   <ng-container *ngIf="showStepper">
-    <mat-horizontal-stepper linear>
-      <!-- Étape 2 : Détails de la consultation -->
-      <mat-step [stepControl]="consultationFormGroup">
-        <form [formGroup]="consultationFormGroup">
-          <ng-template matStepLabel>Détails de la consultation</ng-template>
+    <mat-horizontal-stepper linear #stepper>
+      <!-- Étape 1 : Détails de la consultation -->
+      <mat-step [formGroup]="step1Form">
+        <ng-template matStepLabel>Détails de la consultation</ng-template>
 
-          <mat-form-field appearance="fill">
-            <mat-label>Date de Consultation</mat-label>
-            <input matInput [matDatepicker]="pickerRendezVous" formControlName="dateConsultation" required>
-            <mat-datepicker-toggle matSuffix [for]="pickerRendezVous"></mat-datepicker-toggle>
-            <mat-datepicker #pickerRendezVous></mat-datepicker>
-          </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Date de Consultation</mat-label>
+          <input matInput [matDatepicker]="pickerRendezVous" formControlName="dateConsultation" required>
+          <mat-datepicker-toggle matSuffix [for]="pickerRendezVous"></mat-datepicker-toggle>
+          <mat-datepicker #pickerRendezVous></mat-datepicker>
+        </mat-form-field>
 
-          <mat-form-field appearance="fill">
-            <mat-label>Prestataire</mat-label>
-            <mat-select formControlName="prestataire" required>
-              <mat-option *ngFor="let prestataire of docteurList" [value]="prestataire.id">
-                {{ prestataire.name }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Prestataire</mat-label>
+          <mat-select formControlName="Id_Presetataire" required>
+            <mat-option *ngFor="let prestataire of docteurList" [value]="prestataire.Id_Presetataire">
+              {{ prestataire.Nom }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
 
-          <mat-form-field appearance="fill">
-            <mat-label>Tabagisme</mat-label>
-            <mat-select formControlName="tabagisme" required>
-              <mat-option *ngFor="let option of tabagismeOptions" [value]="option">
-                {{ option }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Tabagisme</mat-label>
+          <mat-select formControlName="tabagisme" required>
+            <mat-option *ngFor="let option of tabagismeOptions" [value]="option">
+              {{ option }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
 
-          <mat-form-field appearance="fill">
-            <mat-label>Diabète</mat-label>
-            <mat-select formControlName="diabete" required>
-              <mat-option *ngFor="let option of diabeteOptions" [value]="option">
-                {{ option }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Diabète</mat-label>
+          <mat-select formControlName="diabete" required>
+            <mat-option *ngFor="let option of diabeteOptions" [value]="option">
+              {{ option }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
 
-          <div class="button-group">
-            <button mat-button matStepperPrevious>Retour</button>
-            <button mat-button matStepperNext [disabled]="!consultationFormGroup.valid">Suivant</button>
-          </div>
-        </form>
+        <div class="button-group">
+          <button mat-button matStepperNext>Suivant</button>
+        </div>
       </mat-step>
 
+      <!-- Étape 2 : Examen clinique -->
+      <mat-step [formGroup]="step2Form">
+        <ng-template matStepLabel>Examen clinique</ng-template>
 
-      <!-- Étape 3 : Examen clinique -->
-      <mat-step [stepControl]="clinicalFormGroup">
-        <form [formGroup]="clinicalFormGroup">
-          <ng-template matStepLabel>Examen clinique</ng-template>
+        <mat-form-field appearance="fill">
+          <mat-label>Poids (kg):</mat-label>
+          <input matInput formControlName="poids" required>
+        </mat-form-field>
 
-          <mat-form-field appearance="fill" class="small-form-field">
-            <mat-label>Poids (kg):</mat-label>
-            <textarea matInput formControlName="poids" required></textarea>
-          </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Taille (m):</mat-label>
+          <input matInput formControlName="taille" required>
+        </mat-form-field>
 
-          <mat-form-field>
-            <mat-label>Taille (m):</mat-label>
-            <textarea matInput formControlName="tailleM" required></textarea>
-          </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Taille (cm):</mat-label>
+          <input matInput formControlName="tailleC">
+        </mat-form-field>
 
-          <mat-form-field>
-            <mat-label>Taille (cm):</mat-label>
-            <textarea matInput formControlName="tailleC"></textarea>
-          </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Tour de taille (cm):</mat-label>
+          <input matInput formControlName="tourDeTaille">
+        </mat-form-field>
 
-          <mat-form-field>
-            <mat-label>Tour de taille (cm):</mat-label>
-            <textarea matInput formControlName="tourTaille"></textarea>
-          </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Fréquence Cardiaque (Batt/mn):</mat-label>
+          <input matInput formControlName="frequenceCardiaque">
+        </mat-form-field>
 
-          <mat-form-field>
-            <mat-label>Fréquence Cardiaque (Batt/mn):</mat-label>
-            <textarea matInput formControlName="freqC"></textarea>
-          </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>PAS (mmHG):</mat-label>
+          <input matInput formControlName="pas" required>
+        </mat-form-field>
 
-          <mat-form-field appearance="fill" class="small-form-field">
-            <mat-label>PAS (mmHG):</mat-label>
-            <textarea matInput formControlName="pas" required></textarea>
-          </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>PAD (mmHG):</mat-label>
+          <input matInput formControlName="pad" required>
+        </mat-form-field>
 
-          <mat-form-field appearance="fill" class="small-form-field">
-            <mat-label>PAD (mmHG):</mat-label>
-            <textarea matInput formControlName="pad" required></textarea>
-          </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Soufle</mat-label>
+          <mat-select formControlName="Id_Soufle" multiple required>
+            <mat-option *ngFor="let soufle of soufles" [value]="soufle.Id_Soufle">
+              {{ soufle.Nom }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
 
-          <mat-form-field appearance="fill" class="small-form-field">
-            <mat-label>Souffle</mat-label>
-            <textarea matInput formControlName="souffle" required></textarea>
-          </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Complication</mat-label>
+          <mat-select formControlName="Id_Complication" multiple required>
+            <mat-option *ngFor="let complication of complications" [value]="complication.Id_Complication">
+              {{ complication.Nom }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
 
-          <mat-form-field appearance="fill" class="small-form-field">
-            <mat-label>Complication</mat-label>
-            <textarea matInput formControlName="complication" required></textarea>
-          </mat-form-field>
-
-          <div class="button-group">
-            <button mat-button matStepperPrevious>Retour</button>
-            <button mat-button matStepperNext [disabled]="!clinicalFormGroup.valid">Suivant</button>
-          </div>
-        </form>
+        <div class="button-group">
+          <button mat-button matStepperPrevious>Retour</button>
+          <button mat-button matStepperNext>Suivant</button>
+        </div>
       </mat-step>
 
-      <mat-step [stepControl]="paraclinicalFormGroup">
+      <!-- Étape 3 : Examens Paraclinique -->
+      <mat-step [formGroup]="step3Form">
         <ng-template matStepLabel>Examens Paraclinique</ng-template>
-        <form [formGroup]="paraclinicalFormGroup">
-          <mat-tab-group>
-            <mat-tab label="Bilan glycémique">
-              <mat-form-field>
-                <mat-label>Glycémie à jeun (g/l)</mat-label>
-                <input matInput formControlName="glycemieJ">
-              </mat-form-field>
-              <mat-form-field>
-                <mat-label>Hémoglobine glyquée (%)</mat-label>
-                <input matInput formControlName="hemoglobine">
-              </mat-form-field>
-            </mat-tab>
+        <mat-tab-group>
+          <mat-tab label="Bilan glycémique">
+            <mat-form-field appearance="fill">
+              <mat-label>Glycémie à jeun (g/l)</mat-label>
+              <input matInput formControlName="glycemie">
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+              <mat-label>Hémoglobine glyquée (%)</mat-label>
+              <input matInput formControlName="hemoglobineGlyquee">
+            </mat-form-field>
+          </mat-tab>
 
-            <mat-tab label="Bilan lipidique">
-              <div class="tab-content">
-                <div class="section">
-                  <mat-form-field appearance="fill">
-                    <mat-label>Cholestérol total</mat-label>
-                    <div class="form-fields">
-                      <mat-form-field appearance="fill">
-                        <mat-label>(mmol/l)</mat-label>
-                        <input matInput formControlName="cholesterolTotalMol">
-                      </mat-form-field>
-                      <mat-form-field appearance="fill">
-                        <mat-label>(g/l)</mat-label>
-                        <input matInput formControlName="cholesterolTotalG">
-                      </mat-form-field>
-                    </div>
-                  </mat-form-field>
-                </div>
-
-                <div class="section">
-                  <mat-form-field appearance="fill">
-                    <mat-label>HDL-Cholestérol</mat-label>
-                    <div class="form-fields">
-                      <mat-form-field appearance="fill">
-                        <mat-label>(mmol/l)</mat-label>
-                        <input matInput formControlName="hdlMol">
-                      </mat-form-field>
-                      <mat-form-field appearance="fill">
-                        <mat-label>(g/l)</mat-label>
-                        <input matInput formControlName="hdlG">
-                      </mat-form-field>
-                    </div>
-                  </mat-form-field>
-                </div>
-
-                <div class="section">
-                  <mat-form-field appearance="fill">
-                    <mat-label>LDL-Cholestérol</mat-label>
-                    <div class="form-fields">
-                      <mat-form-field appearance="fill">
-                        <mat-label>(mmol/l)</mat-label>
-                        <input matInput formControlName="ldlMol">
-                      </mat-form-field>
-                      <mat-form-field appearance="fill">
-                        <mat-label>(g/l)</mat-label>
-                        <input matInput formControlName="ldlG">
-                      </mat-form-field>
-                    </div>
-                  </mat-form-field>
-                </div>
-
-                <div class="section">
-                  <mat-form-field appearance="fill">
-                    <mat-label>Triglycérides</mat-label>
-                    <div class="form-fields">
-                      <mat-form-field appearance="fill">
-                        <mat-label>(mmol/l)</mat-label>
-                        <input matInput formControlName="triglyceridesMol">
-                      </mat-form-field>
-                      <mat-form-field appearance="fill">
-                        <mat-label>(g/l)</mat-label>
-                        <input matInput formControlName="triglyceridesG">
-                      </mat-form-field>
-                    </div>
-                  </mat-form-field>
-                </div>
-              </div>
-            </mat-tab>
-
-
-            <mat-tab label="Bilan rénal">
-              <div class="section">
-                <mat-form-field appearance="fill">
-                  <mat-label>Creatinine</mat-label>
-                  <div class="form-fields">
-                    <mat-form-field appearance="fill">
-                      <mat-label>(mg/l)</mat-label>
-                      <input matInput formControlName="creatineM">
-                    </mat-form-field>
-                    <mat-form-field appearance="fill">
-                      <mat-label>(umol/l)</mat-label>
-                      <input matInput formControlName="creatinel">
-                    </mat-form-field>
-                  </div>
-                </mat-form-field>
-              </div>
-              <div class="section">
+          <mat-tab label="Bilan lipidique">
+            <div class="tab-content">
               <mat-form-field appearance="fill">
-                <mat-label>Uree</mat-label>
+                <mat-label>Cholestérol total</mat-label>
                 <div class="form-fields">
                   <mat-form-field appearance="fill">
-                    <mat-label>(g/l)</mat-label>
-                    <input matInput formControlName="ureeL">
+                    <mat-label>(mmol/l)</mat-label>
+                    <input matInput formControlName="cholesterolTotal">
                   </mat-form-field>
                   <mat-form-field appearance="fill">
-                    <mat-label>(mg/l)</mat-label>
-                    <input matInput formControlName="ureeLG">
+                    <mat-label>(g/l)</mat-label>
+                    <input matInput formControlName="cholesterolTotalG">
+                  </mat-form-field>
+                </div>
+              </mat-form-field>
+              <mat-form-field appearance="fill">
+                <mat-label>HDL-Cholestérol</mat-label>
+                <div class="form-fields">
+                  <mat-form-field appearance="fill">
+                    <mat-label>(mmol/l)</mat-label>
+                    <input matInput formControlName="hdlCholesterol">
+                  </mat-form-field>
+                  <mat-form-field appearance="fill">
+                    <mat-label>(g/l)</mat-label>
+                    <input matInput formControlName="hdlG">
+                  </mat-form-field>
+                </div>
+              </mat-form-field>
+              <mat-form-field appearance="fill">
+                <mat-label>LDL-Cholestérol</mat-label>
+                <div class="form-fields">
+                  <mat-form-field appearance="fill">
+                    <mat-label>(mmol/l)</mat-label>
+                    <input matInput formControlName="ldlCholesterol">
+                  </mat-form-field>
+                  <mat-form-field appearance="fill">
+                    <mat-label>(g/l)</mat-label>
+                    <input matInput formControlName="ldlG">
+                  </mat-form-field>
+                </div>
+              </mat-form-field>
+              <mat-form-field appearance="fill">
+                <mat-label>Triglycérides</mat-label>
+                <div class="form-fields">
+                  <mat-form-field appearance="fill">
+                    <mat-label>(mmol/l)</mat-label>
+                    <input matInput formControlName="triglycerides">
+                  </mat-form-field>
+                  <mat-form-field appearance="fill">
+                    <mat-label>(g/l)</mat-label>
+                    <input matInput formControlName="triglyceridesG">
                   </mat-form-field>
                 </div>
               </mat-form-field>
             </div>
-              <mat-form-field>
-                <mat-label>Debit filtartion glomerulaire:</mat-label>
-                <input matInput formControlName="filtrationGlo">
-              </mat-form-field>
-              <mat-form-field>
-                <mat-label>Bandelette urinaire:</mat-label>
-                <input matInput formControlName="bonduletteUri">
-              </mat-form-field>
-              <mat-form-field>
-                <mat-label>Albuminurie (g/24h):</mat-label>
-                <input matInput formControlName="albuminurie">
-              </mat-form-field>
-              <mat-form-field>
-                <mat-label>Proteinurie de 24h(g/24h):</mat-label>
-                <input matInput formControlName="proteinurie">
-              </mat-form-field>
-            </mat-tab>
+          </mat-tab>
 
-            <mat-tab label="Bilan hépatique">
-              <div class="section">
+          <mat-tab label="Bilan rénal">
+            <mat-form-field appearance="fill">
+              <mat-label>Creatinine</mat-label>
+              <div class="form-fields">
                 <mat-form-field appearance="fill">
-                  <mat-label>Transaminases</mat-label>
-                  <div class="form-fields">
-                    <mat-form-field appearance="fill">
-                      <mat-label>ASAT (UI/l)</mat-label>
-                      <input matInput formControlName="asat">
-                    </mat-form-field>
-                    <mat-form-field appearance="fill">
-                      <mat-label>ALAT(UI/l)</mat-label>
-                      <input matInput formControlName="alat">
-                    </mat-form-field>
-                  </div>
+                  <mat-label>(mg/l)</mat-label>
+                  <input matInput formControlName="creatinineMg">
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                  <mat-label>(umol/l)</mat-label>
+                  <input matInput formControlName="creatinel">
                 </mat-form-field>
               </div>
-            </mat-tab>
-
-            <mat-tab label="Bilan thyroïdien">
-              <mat-form-field>
-                <mat-label>TSH(mUI/L)</mat-label>
-                <input matInput formControlName="tsh">
-              </mat-form-field>
-            </mat-tab>
-
-            <mat-tab label="Autres">
-              <mat-form-field>
-                <mat-label>Kaliémie (mEq/l)</mat-label>
-                <input matInput formControlName="kaliemie">
-              </mat-form-field>
-              <mat-form-field>
-                <mat-label>Vitamine D (ng/ml)</mat-label>
-                <input matInput formControlName="vitamineD">
-              </mat-form-field>
-              <mat-form-field>
-                <mat-label>Acide urique (mg/l)</mat-label>
-                <input matInput formControlName="acideUrique">
-              </mat-form-field>
-            </mat-tab>
-
-            <mat-tab label="ECG & FO">
-                <mat-form-field>
-                  <mat-label>Résultats ECG</mat-label>
-                  <textarea matInput formControlName="ecgResults"></textarea>
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+              <mat-label>Uree</mat-label>
+              <div class="form-fields">
+                <mat-form-field appearance="fill">
+                  <mat-label>(g/l)</mat-label>
+                  <input matInput formControlName="ureeGl">
                 </mat-form-field>
-                <mat-form-field>
-                  <mat-label>Résultats FO</mat-label>
-                  <textarea matInput formControlName="foResults"></textarea>
+                <mat-form-field appearance="fill">
+                  <mat-label>(mg/l)</mat-label>
+                  <input matInput formControlName="ureeLG">
                 </mat-form-field>
-            </mat-tab>
-          </mat-tab-group>
-          <div class="button-group">
-            <button mat-button matStepperPrevious>Précédent</button>
-            <button mat-button matStepperNext>Suivant</button>
-          </div>
-        </form>
+              </div>
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+              <mat-label>Debit filtartion glomerulaire:</mat-label>
+              <input matInput formControlName="DebitFiltrationGlomerulaire">
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+              <mat-label>Bandelette urinaire:</mat-label>
+              <mat-select formControlName="id_Band" multiple required>
+                <mat-option *ngFor="let b of BU" [value]="b.id_Band">
+                  {{ b.nom }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+              <mat-label>Albuminurie:</mat-label>
+              <input matInput formControlName="Albuminurie">
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+              <mat-label>Protéinurie:</mat-label>
+              <input matInput formControlName="Proteinurie">
+            </mat-form-field>
+          </mat-tab>
+
+          <mat-tab label="Bilan hépatique">
+            <mat-form-field appearance="fill">
+              <mat-label>ASAT (U/l)</mat-label>
+              <input matInput formControlName="ASAT">
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+              <mat-label>ALAT (U/l)</mat-label>
+              <input matInput formControlName="ALAT">
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+              <mat-label>TSH (mUI/l)</mat-label>
+              <input matInput formControlName="TSH">
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+              <mat-label>Kaliémie (mmol/l)</mat-label>
+              <input matInput formControlName="Kaliemie">
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+              <mat-label>Vitamine D (ng/ml)</mat-label>
+              <input matInput formControlName="VitamineD">
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+              <mat-label>Acide urique (mg/l)</mat-label>
+              <input matInput formControlName="AcideUrique">
+            </mat-form-field>
+          </mat-tab>
+
+          <mat-tab label="Examens complémentaires">
+            <mat-form-field appearance="fill">
+              <mat-label>ECG</mat-label>
+              <mat-select formControlName="ECG" required>
+                <mat-option *ngFor="let option of ecgOptions" [value]="option">
+                  {{ option }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill">
+              <mat-label>FO</mat-label>
+              <mat-select formControlName="FO" required>
+                <mat-option *ngFor="let option of foOptions" [value]="option">
+                  {{ option }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill">
+              <mat-label>Trouble</mat-label>
+              <mat-select formControlName="id_trouble" required>
+                <mat-option *ngFor="let option of troubles" [value]="option.id_trouble">
+                  {{ option.Nom }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </mat-tab>
+        </mat-tab-group>
+
+        <div class="button-group">
+          <button mat-button matStepperPrevious>Retour</button>
+          <button mat-button matStepperNext>Suivant</button>
+        </div>
       </mat-step>
 
+      <!-- Étape 4 : Plan de traitement -->
+      <mat-step [formGroup]="step4Form">
+        <ng-template matStepLabel>Plan de traitement</ng-template>
 
+        <mat-form-field appearance="fill">
+          <mat-label>Mesures</mat-label>
+          <mat-select formControlName="Id_Mesure" required>
+            <mat-option *ngFor="let mesure of mesures" [value]="mesure.Id_Mesure">
+              {{ mesure.Nom }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
 
-      <!-- Étape 5 : Plan de traitement -->
-      <mat-step [stepControl]="treatmentFormGroup">
-        <form [formGroup]="treatmentFormGroup">
-          <ng-template matStepLabel>Traitements</ng-template>
-          <mat-form-field appearance="fill">
-            <mat-label>Mesures hygieno-dietetiques:</mat-label>
-            <mat-select formControlName="mesuresHyg" required>
-              <mat-option *ngFor="let m of mesureHygienoDiabetiqueOptions" [value]="m">
-                {{ m }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-          <mat-form-field appearance="fill" class="small-form-field">
-            <mat-label>Anti_Diabetique</mat-label>
-            <textarea matInput formControlName="antiDiabetique" required></textarea>
-          </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Anti-diabétiques</mat-label>
+          <mat-select formControlName="Id_AntiDiabetique" multiple required>
+            <mat-option *ngFor="let antiDiabetique of diabetiques" [value]="antiDiabetique.Id_AntiDiabetique">
+              {{ antiDiabetique.Nom }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
 
-          <mat-form-field appearance="fill" class="small-form-field">
-            <mat-label>Traitement preventif</mat-label>
-            <textarea matInput formControlName="traitementPre" required></textarea>
-          </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>TP</mat-label>
+          <mat-select formControlName="Id_Tp" multiple required>
+            <mat-option *ngFor="let tp of tps" [value]="tp.Id_Tp">
+              {{ tp.Nom }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
 
-          <mat-form-field appearance="fill" class="small-form-field">
-            <mat-label>Anti_HTA</mat-label>
-            <textarea matInput formControlName="antiHTA" required></textarea>
-          </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Anti-HTA</mat-label>
+          <mat-select formControlName="Id_AntiHTA" multiple required>
+            <mat-option *ngFor="let antiHTA of htas" [value]="antiHTA.Id_AntiHTA">
+              {{ antiHTA.Nom }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
 
-          <div class="button-group">
-            <button mat-button matStepperPrevious>Retour</button>
-            <button mat-button matStepperNext>Suivant</button>
-          </div>
-        </form>
+        <div class="button-group">
+          <button mat-button matStepperPrevious>Retour</button>
+          <button mat-button matStepperNext>Suivant</button>
+        </div>
       </mat-step>
 
-      <!-- Étape 6 : Suivi et recommandations -->
-      <mat-step [stepControl]="followUpFormGroup">
-        <form [formGroup]="followUpFormGroup">
-          <ng-template matStepLabel>References</ng-template>
-          <mat-form-field appearance="fill" class="full-width">
-            <mat-label>Specialité</mat-label>
-            <mat-select formControlName="specialite">
-              <mat-option *ngFor="let s of specialiteOptions" [value]="s">
-                {{ s }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-          <mat-form-field appearance="fill">
-            <mat-label>Date de Prochaine Rendez-Vous</mat-label>
-            <input matInput [matDatepicker]="picker1" formControlName="dateRendezVous" required>
-            <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
-            <mat-datepicker #picker1></mat-datepicker>
-          </mat-form-field>
-          <div class="button-group">
-            <button mat-raised-button color="primary" matStepperPrevious>Retour</button>
-            <button mat-raised-button color="accent" (click)="onSubmit()">Soumettre</button>
-          </div>
-        </form>
-      </mat-step>
+      <!-- Étape 5 : Suivi et recommandations -->
+      <mat-step [formGroup]="step5Form">
+        <ng-template matStepLabel>Suivi et recommandations</ng-template>
 
+        <mat-form-field appearance="fill">
+          <mat-label>Spécialité</mat-label>
+          <mat-select formControlName="specialite" required>
+            <mat-option *ngFor="let option of specialiteOptions" [value]="option">
+              {{ option }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Date du rendez-vous</mat-label>
+          <input matInput [matDatepicker]="pickerRdv" formControlName="dateRendezVous" required>
+          <mat-datepicker-toggle matSuffix [for]="pickerRdv"></mat-datepicker-toggle>
+          <mat-datepicker #pickerRdv></mat-datepicker>
+        </mat-form-field>
+
+        <div class="button-group">
+          <button mat-button matStepperPrevious>Retour</button>
+          <button mat-raised-button color="accent" (click)="onSubmit()">Soumettre</button>
+        </div>
+      </mat-step>
     </mat-horizontal-stepper>
+
+
   </ng-container>
 </mat-dialog-content>
 

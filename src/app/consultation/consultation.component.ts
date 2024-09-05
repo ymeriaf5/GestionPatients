@@ -1,5 +1,5 @@
-import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {Component, Inject, OnInit, ViewChild} from '@angular/core';
+import {FormBuilder, FormGroup, NgForm, Validators} from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import {HttpClient, HttpErrorResponse, HttpHeaders, HttpResponse} from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -9,6 +9,8 @@ import {Patient_show} from "../model/patient_show";
 import {MatTableDataSource} from "@angular/material/table";
 import {Consultation_show} from "../model/Consultation_show";
 import {Employee} from "../model/employee";
+import {Router} from "@angular/router";
+import {MatStepper} from "@angular/material/stepper";
 
 @Component({
   selector: 'app-consultation',
@@ -16,7 +18,15 @@ import {Employee} from "../model/employee";
   styleUrls: ['./consultation.component.css']
 })
 export class ConsultationComponent implements OnInit {
+  step1Form!: FormGroup;
+  step2Form!: FormGroup;
+  step3Form!: FormGroup;
+  step4Form!: FormGroup;
+  step5Form!: FormGroup;
+  step6Form!: FormGroup;
   consultationFormGroup!: FormGroup;
+  @ViewChild(MatStepper) stepper!: MatStepper;
+  formData: any = {}; // Initialize to hold form data
   clinicalFormGroup!: FormGroup;
   paraclinicalFormGroup!: FormGroup;
   treatmentFormGroup!: FormGroup;
@@ -30,15 +40,17 @@ export class ConsultationComponent implements OnInit {
     'diabete',
     'glycemie_j',
     'cholesterol_total_mol',
-    'dateRendezVous',
+    'Soufle',
     'complication',
-    'specialite',
+    'Bandelettes',
   ];
   dataSource: MatTableDataSource<Consultation_show> = new MatTableDataSource<Consultation_show>();
 
   prestataires = ['Youness Meriaf', 'Other Provider'];
   tabagismeOptions = ['Non-fumeur', 'Fumeur'];
   diabeteOptions = ['Non Diabétique', 'Diabétique'];
+  foOptions = ['Normal', 'Abnormal'];
+  ecgOptions = ['Normal', 'Abnormal'];
   specialiteOptions = [
     'Cardiologie',
     'Endocrinologie',
@@ -64,16 +76,90 @@ export class ConsultationComponent implements OnInit {
     'Surveillance du poids',
     'Hydratation adéquate'
   ];
-  docteurList?:Employee[];
+  docteurList: any[] = [];
+  soufles: any[] = [];
+  complications: any[] = [];
+  BU: any[] = [];
+  troubles: any[] = [];
+  tps: any[] = [];
+  htas: any[] = [];
+  diabetiques: any[] = [];
+  mesures: any[] = [];
+
+
 
 
   constructor(
     public dialogRef: MatDialogRef<ConsultationComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private _formBuilder: FormBuilder,
-    private consultationService:DemoListeService
+    private fb: FormBuilder,
+    private consultationService:DemoListeService,
+    private router: Router
   ) {
     this.patientId = data.id;
+
+    // Initialize forms
+    this.step1Form = this.fb.group({
+      dateConsultation: ['', Validators.required],
+      Id_Presetataire: ['', Validators.required],
+      tabagisme: ['', Validators.required],
+      diabete: ['', Validators.required]
+    });
+
+    this.step2Form = this.fb.group({
+      poids: ['', Validators.required],
+      taille: ['', Validators.required],
+      tailleC: [''],
+      tourDeTaille: [''],
+      frequenceCardiaque: [''],
+      pas: ['', Validators.required],
+      pad: ['', Validators.required],
+      Id_Soufle: ['', Validators.required],
+      Id_Complication: ['', Validators.required]
+    });
+
+    this.step3Form = this.fb.group({
+      glycemie: [''],
+      hemoglobineGlyquee: [''],
+      cholesterolTotal: [''],
+      cholesterolTotalG: [''],
+      hdlCholesterol: [''],
+      hdlG: [''],
+      ldlCholesterol: [''],
+      ldlG: [''],
+      triglycerides: [''],
+      triglyceridesG: [''],
+      creatinineMg: [''],
+      creatinel: [''],
+      ureeGl: [''],
+      ureeLG: [''],
+      DebitFiltrationGlomerulaire: [''],
+      id_Band: ['', Validators.required],
+      Albuminurie: [''],
+      Proteinurie: [''],
+      ASAT: [''],
+      ALAT: [''],
+      TSH: [''],
+      Kaliemie: [''],
+      VitamineD: [''],
+      AcideUrique: [''],
+      ECG: ['', Validators.required],
+      FO: ['', Validators.required],
+      id_trouble: ['', Validators.required]
+    });
+
+    this.step4Form = this.fb.group({
+      Id_Mesure: ['', Validators.required],
+      Id_AntiDiabetique: ['', Validators.required],
+      Id_Tp: ['', Validators.required],
+      Id_AntiHTA: ['', Validators.required]
+    });
+
+    this.step5Form = this.fb.group({
+      specialite: [''],
+      dateRendezVous: ['', Validators.required]
+    });
   }
 
   onAddConsultationClick(): void {
@@ -82,9 +168,19 @@ export class ConsultationComponent implements OnInit {
   ngOnInit() {
     this.getConsulation();
     this.loadDoctors();
+    this.loadSoufle();
+    this.loadComplication();
+    this.loadBU();
+    this.loadTrouble();
+    this.loadtp();
+    this.loadhta();
+    this.loaddiabetique();
+    this.loadmesure();
+
+
     this.consultationFormGroup = this._formBuilder.group({
       dateConsultation: ['', Validators.required],
-      prestataire: ['', Validators.required],
+      Id_Presetataire: ['', Validators.required],
       tabagisme: ['', Validators.required],
       diabete: ['', Validators.required]
     });
@@ -97,8 +193,8 @@ export class ConsultationComponent implements OnInit {
       freqC: [''],
       pas: ['', Validators.required],
       pad: ['', Validators.required],
-      souffle: ['', Validators.required],
-      complication: ['', Validators.required]
+      Id_Soufle: ['', Validators.required],
+      Id_Complication: ['', Validators.required]
     });
 
     this.paraclinicalFormGroup = this._formBuilder.group({
@@ -117,7 +213,7 @@ export class ConsultationComponent implements OnInit {
       ureeL:['',Validators.required],
       ureeLG:['',Validators.required],
       filtrationGlo:['',Validators.required],
-      bonduletteUri:['',Validators.required],
+      id_Band:['',Validators.required],
       albuminurie:['',Validators.required],
       proteinurie:['',Validators.required],
       asat:['',Validators.required],
@@ -128,15 +224,16 @@ export class ConsultationComponent implements OnInit {
       acideUrique: ['',Validators.required],
       ecgResults:['',Validators.required],
       foResults:['',Validators.required],
+      id_trouble:['',Validators.required],
     });
 
 
 
     this.treatmentFormGroup = this._formBuilder.group({
-      mesuresHyg: ['', Validators.required],
-      antiDiabetique: ['', Validators.required],
-      traitementPre: ['', Validators.required],
-      antiHTA: ['', Validators.required]
+      Id_Mesure: ['', Validators.required],
+      Id_AntiDiabetique: ['', Validators.required],
+      Id_Tp: ['', Validators.required],
+      Id_AntiHTA: ['', Validators.required]
     });
 
     this.followUpFormGroup = this._formBuilder.group({
@@ -150,84 +247,26 @@ export class ConsultationComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log('Submit button clicked');
-
-    if (
-      this.consultationFormGroup.valid &&
-      this.clinicalFormGroup.valid &&
-      this.paraclinicalFormGroup.valid &&
-      this.treatmentFormGroup.valid &&
-      this.followUpFormGroup.valid
-    ) {
-      console.log('All forms are valid');
-
-      // Create a Consultation object with form data
-      const newConsultation: Consultation = {
-        dateConsultation: this.consultationFormGroup.value.dateConsultation,
-        prestataire: this.consultationFormGroup.value.prestataire,
-        tabagisme: this.consultationFormGroup.value.tabagisme,
-        diabete: this.consultationFormGroup.value.diabete,
-
-        poids: this.clinicalFormGroup.value.poids,
-        tailleM: this.clinicalFormGroup.value.tailleM,
-        tailleC: this.clinicalFormGroup.value.tailleC,
-        tourTaille: this.clinicalFormGroup.value.tourTaille,
-        freqC: this.clinicalFormGroup.value.freqC,
-        pas: this.clinicalFormGroup.value.pas,
-        pad: this.clinicalFormGroup.value.pad,
-        souffle: this.clinicalFormGroup.value.souffle,
-        complication: this.clinicalFormGroup.value.complication,
-
-        glycemieJ: this.paraclinicalFormGroup.value.glycemieJ,
-        hemoglobine: this.paraclinicalFormGroup.value.hemoglobine,
-        cholesterolTotalMol: this.paraclinicalFormGroup.value.cholesterolTotalMol,
-        cholesterolTotalG: this.paraclinicalFormGroup.value.cholesterolTotalG,
-        hdlMol: this.paraclinicalFormGroup.value.hdlMol,
-        hdlG: this.paraclinicalFormGroup.value.hdlG,
-        ldlMol: this.paraclinicalFormGroup.value.ldlMol,
-        ldlG: this.paraclinicalFormGroup.value.ldlG,
-        triglyceridesMol: this.paraclinicalFormGroup.value.triglyceridesMol,
-        triglyceridesG: this.paraclinicalFormGroup.value.triglyceridesG,
-        creatineM: this.paraclinicalFormGroup.value.creatineM,
-        creatinel: this.paraclinicalFormGroup.value.creatinel,
-        ureeL: this.paraclinicalFormGroup.value.ureeL,
-        ureeLG: this.paraclinicalFormGroup.value.ureeLG,
-        filtrationGlo: this.paraclinicalFormGroup.value.filtrationGlo,
-        bonduletteUri: this.paraclinicalFormGroup.value.bonduletteUri,
-        albuminurie: this.paraclinicalFormGroup.value.albuminurie,
-        proteinurie: this.paraclinicalFormGroup.value.proteinurie,
-        asat: this.paraclinicalFormGroup.value.asat,
-        alat: this.paraclinicalFormGroup.value.alat,
-        tsh: this.paraclinicalFormGroup.value.tsh,
-        kaliemie: this.paraclinicalFormGroup.value.kaliemie,
-        vitamineD: this.paraclinicalFormGroup.value.vitamineD,
-        acideUrique: this.paraclinicalFormGroup.value.acideUrique,
-        ecgResults: this.paraclinicalFormGroup.value.ecgResults,
-        foResults: this.paraclinicalFormGroup.value.foResults,
-
-        mesuresHyg: this.treatmentFormGroup.value.mesuresHyg,
-        antiDiabetique: this.treatmentFormGroup.value.antiDiabetique,
-        traitementPre: this.treatmentFormGroup.value.traitementPre,
-        antiHTA: this.treatmentFormGroup.value.antiHTA,
-
-        specialite: this.followUpFormGroup.value.specialite,
-        dateRendezVous:this.followUpFormGroup.value.dateRendezVous,
-        patientId: this.patientId  // Assuming you want to associate the consultation with a specific patient
+    if (this.step1Form.valid && this.step2Form.valid && this.step3Form.valid && this.step4Form.valid && this.step5Form.valid) {
+      const formData = {
+        ...this.step1Form.value,
+        ...this.step2Form.value,
+        ...this.step3Form.value,
+        ...this.step4Form.value,
+        ...this.step5Form.value,
+        patientId: this.patientId
       };
-
-      // Submit the Consultation object to the service
-      this.consultationService.addConsultation(newConsultation).subscribe(
-        (response) => {
-          console.log('Consultation added successfully:', response);
-          this.getConsulation();  // Refresh the consultation list
-          this.dialogRef.close();  // Close the dialog after submission
-        },
-        (error: HttpErrorResponse) => {
-          console.error('Error adding consultation:', error);
-        }
-      );
+      console.log('Form Data:', formData);
+      // Call the service to submit the form data
+      this.consultationService.addConsultation(formData).subscribe(response => {
+        console.log('Consultation added successfully:', response);
+        this.dialogRef.close();  // Close the dialog after submission
+        // Optionally reset the form or navigate away
+      }, error => {
+        console.error('Error adding consultation:', error);
+      });
     } else {
-      console.log('One or more forms are invalid');
+      console.log('Form is invalid');
     }
   }
 
@@ -243,13 +282,60 @@ export class ConsultationComponent implements OnInit {
     );
   }
   loadDoctors(): void {
-    this.consultationService.getDoctors().subscribe(
-      (doctors: Employee[]) => {
-        this.docteurList = doctors;
-      },
-      (error: HttpErrorResponse) => {
-        console.error('Error fetching doctors:', error);
-      }
+    this.consultationService.getPrestataire().subscribe(
+      data => this.docteurList = data,
+      error => console.error('Error fetching doctor', error)
     );
   }
+  loadSoufle(): void {
+    this.consultationService.getSoufle().subscribe(
+      data => this.soufles = data,
+      error => console.error('Error fetching soufle', error)
+    );
+  }
+  loadComplication(): void {
+    this.consultationService.getComplication().subscribe(
+      data => this.complications = data,
+      error => console.error('Error fetching complication', error)
+    );
+  }
+  loadBU(): void {
+    this.consultationService.getBU().subscribe(
+      data => this.BU = data,
+      error => console.error('Error fetching BandeletteUrinaire', error)
+    );
+  }
+  loadTrouble(): void {
+    this.consultationService.getTrouble().subscribe(
+      data => this.troubles = data,
+      error => console.error('Error fetching troubles', error)
+    );
+  }
+  loadhta(): void {
+    this.consultationService.getantihta().subscribe(
+      data => this.htas = data,
+      error => console.error('Error fetching hta', error)
+    );
+  }
+  loaddiabetique(): void {
+    this.consultationService.getandid().subscribe(
+      data => this.diabetiques = data,
+      error => console.error('Error fetching diabetique', error)
+    );
+  }
+  loadtp(): void {
+    this.consultationService.gettp().subscribe(
+      data => this.tps = data,
+      error => console.error('Error fetching tp', error)
+    );
+  }
+  loadmesure(): void {
+    this.consultationService.getmesure().subscribe(
+      data => this.mesures = data,
+      error => console.error('Error fetching mesure', error)
+    );
+  }
+
+
+
 }

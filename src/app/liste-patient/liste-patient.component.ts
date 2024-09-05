@@ -7,6 +7,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { DemoListeService } from "../demo-liste-service.service";
 import {MatDialog} from "@angular/material/dialog";
 import {ConsultationComponent} from "../consultation/consultation.component";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-liste-patient',
@@ -26,22 +27,25 @@ export class ListePatientComponent implements OnInit {
 
   // Column to property mapping
   columnMap: { [key: string]: keyof Patient_show } = {
-    id: 'id',
+    id: 'Id_Patient',
     antecedent: 'antecedent_nom',
-    cin: 'cin',
-    nom: 'nom',
-    prenom: 'prenom',
-    sexe: 'sexe',
-    telephone: 'telephone',
+    cin: 'CNIE',
+    nom: 'Nom',
+    prenom: 'Prenom',
+    sexe: 'Sexe',
+    telephone: 'Telephone',
     couverture: 'couverture_type',
     provenance: 'provenance_nom',
     adresse: 'adresse'
   };
 
+
   constructor(
     private patientService: DemoListeService,
-    public dialog: MatDialog
-    ) {}
+    public dialog: MatDialog,
+  private router: Router
+
+) {}
 
   ngOnInit(): void {
     this.getPatients();
@@ -82,6 +86,7 @@ export class ListePatientComponent implements OnInit {
       },
       (error: HttpErrorResponse) => {
         console.error('Error deleting patient:', error);
+        this.router.navigate(['/dashboard/patients']);
       }
     );
   }
