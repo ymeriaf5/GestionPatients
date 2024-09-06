@@ -498,8 +498,8 @@ const updatePatient = async (req, res, id) => {
 
     req.on('end', async () => {
       try {
+        console.log(id)
         const {
-          Id_Patient,
           Id_Antecedent, // This should be an array of antecedent IDs
           Id_Couverture,
           DateNaissance,
@@ -511,7 +511,7 @@ const updatePatient = async (req, res, id) => {
           Sexe,
           Telephone,
           Id_NiveauScolarite,
-          Id_Etablissement,
+          id_Etablissement,
         } = JSON.parse(body);
 
         // Convert CNIE to uppercase
@@ -552,7 +552,7 @@ const updatePatient = async (req, res, id) => {
               Id_Couverture = @Id_Couverture,
               Id_Provenance = @Id_Provenance,
               Id_NiveauScolarite = @Id_NiveauScolarite,
-              Id_Etablissement = @Id_Etablissement
+              id_Etablissement = @id_Etablissement
             WHERE Id_Patient = @id
           `;
 
@@ -568,7 +568,7 @@ const updatePatient = async (req, res, id) => {
             .input('Id_Couverture', sql.Int, Id_Couverture)
             .input('Id_Provenance', sql.Int, Id_Provenance)
             .input('Id_NiveauScolarite', sql.Int, Id_NiveauScolarite)
-            .input('Id_Etablissement', sql.Int, Id_Etablissement)
+            .input('id_Etablissement', sql.Int, id_Etablissement)
             .input('id', sql.Int, id)
             .query(updatePatientQuery);
 
@@ -584,9 +584,12 @@ const updatePatient = async (req, res, id) => {
           const existingAntecedents = existingAntecedentsResult.recordset.map((record) => record.Id_Antecedent);
 
           // Convert provided Id_Antecedent to an array
-          const newAntecedents = Array.isArray(Id_Antecedent)
-            ? Id_Antecedent
-            : Id_Antecedent.split(',').map((id1) => parseInt(id1.trim(), 10)).filter((id1) => !isNaN(id1));
+          const newAntecedents = Id_Antecedent
+            ? (Array.isArray(Id_Antecedent)
+              ? Id_Antecedent
+              : Id_Antecedent.split(',').map(id => parseInt(id.trim(), 10)).filter(id => !isNaN(id)))
+            : [];
+
 
           // Determine antecedents to add and remove
           const antecedentsToAdd = newAntecedents.filter((id) => !existingAntecedents.includes(id));
@@ -757,8 +760,8 @@ const getPatientById = async (req, res, id) => {
       Id_Couverture: rows[0].Id_Couverture,
       Id_Provenance: rows[0].Id_Provenance,
       Id_NiveauScolarite: rows[0].Id_NiveauScolarite,
-      Id_Etablissement: rows[0].Id_Etablissement,
-      EtablissementNom: rows[0].EtablissementNom,  // Add the establishment name
+      id_Etablissement: rows[0].id_Etablissement,
+      Nom_Etablissement: rows[0].EtablissementNom,  // Add the establishment name
       Antecedents: rows
         .map(row => ({
           Id_Antecedent: row.Id_Antecedent,
@@ -766,6 +769,8 @@ const getPatientById = async (req, res, id) => {
         }))
         .filter(a => a.Id_Antecedent !== null) // Remove null antecedents
     };
+
+    console.log(patientData)
 
     res.statusCode = 200;
     res.setHeader('Content-Type', 'application/json');

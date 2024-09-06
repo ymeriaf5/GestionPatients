@@ -36,7 +36,7 @@ export class UpdatePatientComponent implements OnInit{
       Adresse: ['', Validators.required],
       Id_Provenance: ['', Validators.required],
       Id_NiveauScolarite: ['', Validators.required],
-      Id_Etablissement: ['', Validators.required],
+      id_Etablissement: ['', Validators.required],
     });
 
   }

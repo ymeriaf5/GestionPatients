@@ -110,7 +110,7 @@ export class DemoListeService {
   }
 
   updatePatient(patient: Patient): Observable<HttpResponse<void>> {
-    return this.http.put<void>(`${this.apiUrl}/patients/${patient.id}`, patient, { headers: this.getHeaders(), observe: 'response' });
+    return this.http.put<void>(`${this.apiUrl}/patients/${patient.Id_Patient}`, patient, { headers: this.getHeaders(), observe: 'response' });
   }
 
   deletePatient(patientId: number): Observable<void> {

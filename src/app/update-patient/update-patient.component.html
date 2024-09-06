@@ -108,7 +108,7 @@
       <div class="form-field">
         <mat-form-field appearance="outline">
           <mat-label>Etablissement</mat-label>
-          <mat-select id="Id_Etablissement" formControlName="Id_Etablissement" required>
+          <mat-select id="Id_Etablissement" formControlName="id_Etablissement" required>
             <mat-option *ngFor="let etablissemnt of etablissemnts" [value]="etablissemnt.Id_Etablissement">
               {{ etablissemnt.Nom_Etablissement }}
             </mat-option>

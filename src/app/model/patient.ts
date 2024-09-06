@@ -1,5 +1,5 @@
 export interface Patient {
-  id: number;
+  Id_Patient: number;
   antecedent_id: number;
   couverture_id: number;
   provenance_id: number;

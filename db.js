@@ -4,7 +4,7 @@ const sql = require('mssql');
 const config = {
   user: 'bob',             // Remplacez par votre nom d'utilisateur SQL Server
   password: 'bob',        // Remplacez par votre mot de passe SQL Server
-  server: 'PC',      // Remplacez par le nom de l'hôte ou l'adresse IP de votre serveur SQL Server
+  server: 'DESKTOP-4EOGIN2',      // Remplacez par le nom de l'hôte ou l'adresse IP de votre serveur SQL Server
   database: 'GestionPatient', // Nom de votre base de données
   port: 1433,               // Port par défaut pour SQL Server
   options: {

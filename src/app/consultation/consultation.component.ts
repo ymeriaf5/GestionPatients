@@ -158,7 +158,6 @@ export class ConsultationComponent implements OnInit {
 
     this.step5Form = this.fb.group({
       specialite: [''],
-      dateRendezVous: ['', Validators.required]
     });
   }
 
